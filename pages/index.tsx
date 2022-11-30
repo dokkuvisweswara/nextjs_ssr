@@ -3,8 +3,8 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import Switch from "@mui/material/Switch";
 import { useEffect, useState } from 'react';
-import Component1 from './components/component1';
-import Component2 from './components/component2';
+import ComponentOne from './components/ComponentOne';
+import ComponentTwo from './components/ComponentTwo';
 
 const label = { inputProps: { "aria-label": "Switch demo" } };
 
@@ -40,7 +40,7 @@ export default function Home() {
       <main className={styles.main}>      
         <Switch {...label} onClick={handleToggle}/>
         {
-          mobile ? <Component1 /> : <Component2 />
+          mobile ? <ComponentOne /> : <ComponentTwo />
         }
       </main>
     </div>
