@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Image from 'next/image';
-import fetchCarousel from '../auth.service.js';
 import styles from '../../styles/Home.module.css';
 export default function Carousel ({data}) {
     const [carousalData, setCarousalData] = useState([]);
