@@ -1,0 +1,26 @@
+.container {
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  min-height: calc(100vh - 73px);
+  background-color: aquamarine;
+ }
+ .header {
+  display: flex;
+  list-style: none;  
+  height: 20px;
+
+ }
+ .footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+
+ }
+ .carousel {
+  display: flex;
+  flex-direction: row;    
+}
