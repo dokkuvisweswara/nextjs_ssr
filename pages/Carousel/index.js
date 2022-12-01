@@ -18,7 +18,7 @@ export default function Carousel ({data}) {
         <>
          <div className={styles.carousel}>
         {
-        data.length> 0 ? data.map((x, index) => (
+        data && data.length> 0 ? data.map((x, index) => (
             <Image unoptimized src={x.images[0].url} alt={x.title} width={100} height={200} key={index}/>
         )) : <h1>Loading.....</h1>
         }
