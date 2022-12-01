@@ -1,4 +1,4 @@
-import About from '../About/index'
+import About from '../About/index';
 export default function ComponentOne() {
     return (
       <>
