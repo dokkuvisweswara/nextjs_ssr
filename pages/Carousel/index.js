@@ -7,13 +7,13 @@ export default function Carousel ({data}) {
     const [carousalData, setCarousalData] = useState([]);
     const router = useRouter()
     
-    useEffect(() => {
-        console.log("{}", data);
-        // const url = "https://catalogue-ms.cloud.altbalaji.com/v1/v1/section/list/S1_Lock_Upp-Preview_Carousal?domain=IN&limit=10";
-        // fetchCarousel(url).then((x)=>{
-        //     console.log("....", x);
-        //     setCarousalData(...x)});
-    }, [])
+    // useEffect(() => {
+    //     console.log("{}", data);
+    //     // const url = "https://catalogue-ms.cloud.altbalaji.com/v1/v1/section/list/S1_Lock_Upp-Preview_Carousal?domain=IN&limit=10";
+    //     // fetchCarousel(url).then((x)=>{
+    //     //     console.log("....", x);
+    //     //     setCarousalData(...x)});
+    // }, [])
     return (
         <>
          <div className={styles.carousel}>
