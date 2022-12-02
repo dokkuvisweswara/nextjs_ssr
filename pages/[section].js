@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import Carousel from './Carousel/index';
 
 
-export default function Section ({ data:[] })  {
+export default function Section ({ data })  {
     const router = useRouter();
     useEffect(() => {
       if (router.asPath !== router.route) {

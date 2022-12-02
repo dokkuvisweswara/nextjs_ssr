@@ -3,9 +3,9 @@ import Image from 'next/image';
 import styles from '../../styles/Home.module.css';
 import { useRouter } from 'next/router'
 
-export default function Carousel ({data}) {
-    const [mount, setMount] = useState(false)
-    const [carousalData, setCarousalData] = useState(data);
+export default function Carousel (props) {
+    const [mount, setMount] = useState(false);
+    const [carousalData, setCarousalData] = useState(props.data);
     const [iterableData, setIterableData] = useState([]);
     const router = useRouter()
     
@@ -16,6 +16,7 @@ export default function Carousel ({data}) {
     
     useEffect(() => {
         if(!mount){
+            console.log("---", carousalData)
             setMount(true);
             inItSetTimeOut();
         }
@@ -25,7 +26,6 @@ export default function Carousel ({data}) {
         setTimeout(() => {
             const x = [...carousalData];
             x.push(x[1]);
-            setIterableData([...iterableData, ...carousalData[1]])
             setCarousalData([...x]);
         }, 100)
     }
