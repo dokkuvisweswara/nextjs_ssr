@@ -6,7 +6,6 @@ import Carousel from './Carousel/index';
 
 export default function Section ({ data })  {
     const router = useRouter();
-    console.error("<<,,>>", data);
     useEffect(() => {
       if (router.asPath !== router.route) {
         // router.query.lang is defined

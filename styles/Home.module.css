@@ -22,7 +22,9 @@
  }
  .carousel {
   display: flex;
-  flex-direction: row;    
+  flex-direction: row;  
+  width: 100%;
+  overflow: auto;  
 }
 .carouselImag {
   margin: 10px;

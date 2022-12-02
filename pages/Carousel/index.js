@@ -3,7 +3,7 @@ import Image from 'next/image';
 import styles from '../../styles/Home.module.css';
 import { useRouter } from 'next/router'
 
-export default function Carousel ({data}) {
+export default function Carousel ({data:[]}) {
     const [carousalData, setCarousalData] = useState([...data]);
     const router = useRouter()
     
@@ -13,7 +13,6 @@ export default function Carousel ({data}) {
     }
     
     useEffect(() => {
-        console.log("{}", carousalData, data);
         inItSetTimeOut(); 
         // const url = "https://catalogue-ms.cloud.altbalaji.com/v1/v1/section/list/S1_Lock_Upp-Preview_Carousal?domain=IN&limit=10";
         // fetchCarousel(url).then((x)=>{
