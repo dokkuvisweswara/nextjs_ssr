@@ -24,3 +24,6 @@
   display: flex;
   flex-direction: row;    
 }
+.carouselImag {
+  margin: 10px;
+}

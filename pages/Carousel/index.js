@@ -4,22 +4,41 @@ import styles from '../../styles/Home.module.css';
 import { useRouter } from 'next/router'
 
 export default function Carousel ({data}) {
-    const [carousalData, setCarousalData] = useState([]);
+    const [carousalData, setCarousalData] = useState([...data]);
     const router = useRouter()
     
-    // useEffect(() => {
-    //     console.log("{}", data);
-    //     // const url = "https://catalogue-ms.cloud.altbalaji.com/v1/v1/section/list/S1_Lock_Upp-Preview_Carousal?domain=IN&limit=10";
-    //     // fetchCarousel(url).then((x)=>{
-    //     //     console.log("....", x);
-    //     //     setCarousalData(...x)});
-    // }, [])
+    const handleClick = async (u) => {
+        console.log(u);
+        alert(u)
+    }
+    
+    useEffect(() => {
+        console.log("{}", carousalData, data);
+        inItSetTimeOut(); 
+        // const url = "https://catalogue-ms.cloud.altbalaji.com/v1/v1/section/list/S1_Lock_Upp-Preview_Carousal?domain=IN&limit=10";
+        // fetchCarousel(url).then((x)=>{
+        //     console.log("....", x);
+        //     setCarousalData(...x)});
+    }, []);
+    async function inItSetTimeOut() {
+        setTimeout(() => {
+            // data.push(data[1]);
+            let x = [...carousalData];
+            x.push(x[1]);
+            setCarousalData([...x]);
+            carousalData.map((item) => {
+                console.log('+=+', item.images[0].url);
+            })
+        }, 100)
+    }
     return (
         <>
          <div className={styles.carousel}>
         {
-        data && data.length> 0 ? data.map((x, index) => (
-            <Image unoptimized src={x.images[0].url} alt={x.title} width={100} height={200} key={index}/>
+        carousalData && carousalData.length> 0 ? carousalData.map((item, index) => (
+            <button onClick={() => {handleClick(item.title)}} key={index}>
+                <Image unoptimized src={item.images[0].url} alt={item.title} width={100} height={200} key={index} className={styles.carouselImag}/>
+            </button>
         )) : <h1>Loading.....</h1>
         }
         </div> 
