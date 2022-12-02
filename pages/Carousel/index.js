@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Image from 'next/image';
 import styles from '../../styles/Home.module.css';
 
-export default function Carousel ({data}) {
+export default function Carousel ({data:[]}) {
     const g = data; 
     const [carouselData, setCarouselData] = useState([...g]);
     const handleClick = async (u) => {
