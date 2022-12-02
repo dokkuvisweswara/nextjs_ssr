@@ -3,7 +3,9 @@ import Image from 'next/image';
 import styles from '../../styles/Home.module.css';
 import { useRouter } from 'next/router'
 
-export default function Carousel ({data:[]}) {
+export default function Carousel ({data}) {
+    console.log("[]", data);
+    const [mount, setMount] = useState(false)
     const [carousalData, setCarousalData] = useState(data);
     const router = useRouter()
     
@@ -13,20 +15,17 @@ export default function Carousel ({data:[]}) {
     }
     
     useEffect(() => {
-        inItSetTimeOut(); 
-        // const url = "https://catalogue-ms.cloud.altbalaji.com/v1/v1/section/list/S1_Lock_Upp-Preview_Carousal?domain=IN&limit=10";
-        // fetchCarousel(url).then((x)=>{
-        //     console.log("....", x);
-        //     setCarousalData(...x)});
+        if(!mount){
+            setMount(true);
+            inItSetTimeOut();
+        }
+        // eslint-disable-next-line
     }, []);
     async function inItSetTimeOut() {
         setTimeout(() => {
             const x = [...carousalData];
             x.push(x[1]);
             setCarousalData([...x]);
-            carousalData.map((item) => {
-                console.log('+=+', item.images[0].url);
-            })
         }, 100)
     }
     return (
