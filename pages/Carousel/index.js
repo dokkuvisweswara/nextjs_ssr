@@ -20,7 +20,7 @@ export default function Carousel ({data}) {
             inItSetTimeOut();
         }
         // eslint-disable-next-line
-    }, []);
+    }, [carousalData, data]);
     async function inItSetTimeOut() {
         setTimeout(() => {
             const x = [...carousalData];
