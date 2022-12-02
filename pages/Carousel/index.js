@@ -5,7 +5,8 @@ import { useRouter } from 'next/router'
 
 export default function Carousel ({data}) {
     const [mount, setMount] = useState(false)
-    const [carousalData, setCarousalData] = useState(data && [...data]);
+    const [carousalData, setCarousalData] = useState(data);
+    const [iterableData, setIterableData] = useState([]);
     const router = useRouter()
     
     const handleClick = async (u) => {
@@ -19,11 +20,12 @@ export default function Carousel ({data}) {
             inItSetTimeOut();
         }
         // eslint-disable-next-line
-    });
+    }, []);
     async function inItSetTimeOut() {
         setTimeout(() => {
             const x = [...carousalData];
             x.push(x[1]);
+            setIterableData([...iterableData, ...carousalData[1]])
             setCarousalData([...x]);
         }, 100)
     }
