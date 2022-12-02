@@ -30,7 +30,6 @@ export async function getServerSideProps(context) {
       'public, s-maxage=100, stale-while-revalidate=59'
     )
     const URl = `https://catalogue-ms.cloud.altbalaji.com/v1/list/zuul/catalogue/balaji/catalogue/filters/carousal-`+section+`?domain=IN&limit=10`;
-    console.log("....", URl);
     const response = await fetch(URl)
     const content = await response.json()
     const data = content.content;
