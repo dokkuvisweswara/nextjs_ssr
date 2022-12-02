@@ -4,7 +4,7 @@ import styles from '../../styles/Home.module.css';
 import { useRouter } from 'next/router'
 
 export default function Carousel ({data:[]}) {
-    const [carousalData, setCarousalData] = useState([...data]);
+    const [carousalData, setCarousalData] = useState(data);
     const router = useRouter()
     
     const handleClick = async (u) => {
@@ -21,8 +21,7 @@ export default function Carousel ({data:[]}) {
     }, []);
     async function inItSetTimeOut() {
         setTimeout(() => {
-            // data.push(data[1]);
-            let x = [...carousalData];
+            const x = [...carousalData];
             x.push(x[1]);
             setCarousalData([...x]);
             carousalData.map((item) => {
