@@ -3,8 +3,8 @@ import Image from 'next/image';
 import styles from '../../styles/Home.module.css';
 
 export default function Carousel ({data}) {
-    
-    const [carouselData, setCarouselData] = useState([...data]);
+    const g = data; 
+    const [carouselData, setCarouselData] = useState([...g]);
     const handleClick = async (u) => {
         alert(u)
     }
@@ -12,7 +12,7 @@ export default function Carousel ({data}) {
     useEffect(() => {
         console.log("carouselData", carouselData);
         inItsetTimeOut();
-    }, []);
+    }, [inItsetTimeOut, carouselData]);
 
     function inItsetTimeOut() {
         setTimeout(() => {
