@@ -16,9 +16,11 @@ export default function Section ({ data })  {
         <>
         <h1>Section : { router.asPath}</h1>
         <Carousel data={[...data]} />
+        <h1>{router.asPath}</h1> <input type="text"/>
         </>
     )
 }
+
 
 export async function getServerSideProps(context) {
     // Fetch data from external API 
