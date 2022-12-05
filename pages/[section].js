@@ -29,8 +29,9 @@ export async function getServerSideProps(context) {
     )
     const URl = `https://catalogue-ms.cloud.altbalaji.com/v1/list/zuul/catalogue/balaji/catalogue/filters/carousal-`+section+`?domain=IN&limit=10`;
     const response = await fetch(URl)
-    const content = await response.json()
-    const data = content.content;
+    const content = await response.json();
+    let data = [];
+    data = content.content;
     // Pass data to the page via props
     
     return { props: { data } }
