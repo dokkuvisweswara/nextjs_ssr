@@ -2,7 +2,8 @@ import { useRouter } from 'next/router';
 import { pid } from 'process';
 import { useEffect, useState } from 'react';
 import Carousel from './Carousel/index';
-
+import Slider from './sliders/slider.js';
+import styles from '../styles/Home.module.css';
 
 export default function Section ({ data })  {
     const router = useRouter();
@@ -11,14 +12,31 @@ export default function Section ({ data })  {
       //   // router.query.lang is defined
         
       // }
-    }, [router])
+    }, [router.isReady])
     return (
         <>
-        <h1>Section : { router.asPath}</h1>
-        <Carousel data={[...data]} />
-        <h1>{router.asPath}</h1> <input type="text"/>
+        {
+          data.length > 0 ? content(data) : Loading()
+        }        
         </>
     )
+}
+export function content(data) {
+  return(
+    <>
+      <Carousel data={data} />
+      <Slider data={data} />
+    </>
+  )
+}
+export function Loading() {
+  return(
+    <>
+    <div className={styles.loading}>
+    <h1>Loading....</h1>
+    </div>
+    </>
+  )
 }
 
 
@@ -28,12 +46,13 @@ export async function getServerSideProps(context) {
     context.res.setHeader(
       'Cache-Control',
       'public, s-maxage=100, stale-while-revalidate=59'
-    )
+    );
     const URl = `https://catalogue-ms.cloud.altbalaji.com/v1/list/zuul/catalogue/balaji/catalogue/filters/carousal-`+section+`?domain=IN&limit=10`;
-    const response = await fetch(URl)
+    const response = await fetch(URl);
+    console.error("res", response)
     const content = await response.json();
     let data = [];
-    data = content.content;
+    data = content.content ? content.content : [];
     // Pass data to the page via props
     
     return { props: { data } }

@@ -1,0 +1,76 @@
+.WRAPPER{
+    /* max-width: 1240px; */
+    height: 300px;
+    margin: 10px 0;
+    /* overflow-x: hidden; */
+    overflow: hidden;
+    position: relative;
+    padding: 0 10px;
+}
+.WRAPPER .TABSBOX{
+    display: flex;
+    transition: .4s ease-out;
+    width: 100%;
+    height: 100%;
+    /* overflow: hidden; */
+    overflow-y: hidden; 
+    scroll-behavior: smooth;
+    
+}
+.TABSBOX::-webkit-scrollbar{
+  display: none;
+}
+.TABSBOX.dragging{
+  scroll-behavior: auto;
+  cursor: grab;
+}
+.TABSBOX.dragging .TAB{
+  user-select: none;
+}
+.TABSBOX.dragging .TAB img{
+  user-select: none;
+}
+.TABSBOX .TAB{
+    margin: 0 5px;
+    height: 100%;
+    cursor: pointer;
+    /* border-radius: 20px; */
+}
+.TAB img{
+    width: 200px;
+    height: 100%;
+    border-radius: 10px;
+}
+
+.carouselButton {
+    /* vertically centering the buttons */
+    position: absolute;
+    height: 100%;
+    width: 50px;
+    /* transform: translateY(-50%); */
+    z-index: 999;  
+    /* basic styling */
+    padding: 0;
+    /* margin: 0.5rem; */
+    background-color: transparent;
+    /* color: #fff;
+    background: rgba(0, 0, 0, 0.1); */
+    border: none;
+  
+    font-size: 1.5rem;
+    cursor: pointer;  
+    transition: color 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .carouselButton:hover {
+    /* color: rgba(0, 0, 0, 0.5); */
+    font-size: 2rem;
+  }
+  
+  .carouselButtonNext {
+    /* The "next slide button" will be at the right */
+    right: 0;
+  }

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && next export",
     "start": "next start",
     "lint": "next lint"
   },
@@ -12,11 +12,12 @@
     "@emotion/react": "^11.10.5",
     "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.5",
-    "@mui/material": "^5.10.15",
-    "@reduxjs/toolkit": "^1.9.0",
+    "@mui/material": "^5.11.0",
+    "@reduxjs/toolkit": "^1.9.1",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
+    "axios": "^1.2.1",
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.5",
     "memory-cache": "^0.2.0",
@@ -25,6 +26,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-redux": "^8.0.5",
+    "redux": "^4.2.0",
     "typescript": "4.9.3"
   },
   "devDependencies": {

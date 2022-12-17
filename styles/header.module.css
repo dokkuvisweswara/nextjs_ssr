@@ -1,0 +1,115 @@
+
+.headerArea{
+    background-color: rgba(0, 0, 0, 0.1);
+    position: fixed;
+    width: 100%;
+    padding: 0 30px;
+    z-index:  999;
+    border-bottom: #909090ad;
+}
+.headerContainer{
+    width: 100%;
+    margin: auto;
+    display: table;
+}
+.siteLogo{
+    float: left;
+    padding: 17px 0px;
+}
+.siteLogo a{
+    color: #fff;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: 600;
+    padding: 15px;
+}
+.mobileNav{
+    display: none;
+}
+.siteNavMenu{
+    float: right;
+    display: flex;
+    flex-direction: row;
+}
+.PrimaryMenue{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.PrimaryMenue li{
+    display: inline-block;
+    margin: 21px 5px;
+}
+.PrimaryMenue a{
+    color:#fff;
+    position: relative;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 1px;
+    padding: 10px 0;
+    transition: .5s;
+}
+.PrimaryMenue a:hover, .PrimaryMenue .active{
+    color:#ff4a44;
+}
+.PrimaryMenue li a:after{
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background: #ff4a44;
+    bottom: 0px;
+    left: 0px;
+    transition: all .5s;
+}
+.PrimaryMenue li a:hover:after{
+    width: 100%;
+}
+.PrimaryMenue li .active:after{
+    width: 100%;
+}
+.mobileNav{
+    float: right;
+    margin: 10px;
+    padding: 10px;
+    font-size: 24px;
+    color: #fff;
+    outline: none;
+    cursor: pointer;
+    display: none;
+}
+
+/* Responsive css */
+
+@media only screen and (max-width: 900px){
+    .siteNavMenu{
+        display: flex;
+        flex-direction: column;
+        float: none;
+        position: absolute;
+        background: #142440;
+        width: 50%;
+        right: 0;
+        top: 73px;
+        padding: 30px 0px;
+        border-top: 1px solid #4a4848;
+        clip-path: circle(0% at 100% 0% );
+        transition: all .8s;
+        z-index: 9999;
+    }
+    .PrimaryMenue li{
+        display: block;
+        text-align: center;
+        margin: 25px 5px;        
+    }
+    .mobileNav{
+        display: block;
+    }
+    .mobileMenu{
+        clip-path: circle(150% at 100% 0%);
+    }
+    .PrimaryMenue li a:after{
+        display: none;
+    }
+}

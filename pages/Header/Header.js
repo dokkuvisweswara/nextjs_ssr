@@ -1,16 +1,50 @@
-import styles from '../../styles/Home.module.css';
+import styles from '../../styles/header.module.css';
 import Link from 'next/link';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import { useRouter } from "next/router";
 
 export default function Header() {
+    let userLogin = useSelector((state) => state.profile.name);
+    const router = useRouter();
+    console.log("iiiii", router);
+    const primeryMenu = ['Home', 'Shows', 'Comedy', 'Movie', 'Music'];
+    useEffect(() => {
+        console.log("iiiii", router.asPath);
+    }, [router.isReady]);
+    const toggMenue = () => {
+        const siteNavMenu = document.querySelectorAll('[data-navmenu]');
+        console.log("querySelectorAll", siteNavMenu);
+        siteNavMenu[0].classList.toggle(styles.mobileMenu);
+    }
     return(
-        <>
-        <ul className={styles.header}>
-            <li> <Link href="/"> Home </Link> </li>
-            <li> <Link href="/Shows"> Shows </Link> </li>
-            <li> <Link href="/Comedy"> Comedy </Link> </li>
-            <li> <Link href="/Movie"> Movies </Link> </li>
-            <li><Link href="/About"> About </Link></li>
-        </ul>
-        </>
+        <header className={styles.headerArea}>
+        <div className={styles.headerContainer}>
+            <div className={styles.siteLogo}>
+                <a>HelloDemo</a>
+            </div>
+            <div className={styles.mobileNav} onClick={() => toggMenue()}>
+                <i className="fas fa-bars"></i>
+            </div>
+            <div className={styles.siteNavMenu} data-navmenu>
+                <ul className={styles.PrimaryMenue}>
+                    {
+                        primeryMenu.map((item, index) =>(
+                            <li> <Link href={item} className={router.asPath =='/'+item ? styles.active : ""} key={index}> {item} </Link> </li>                            
+                        ))
+                    }
+                </ul>
+                <ul className={styles.PrimaryMenue}>
+                    {
+                        userLogin && userLogin!== 'null' ?
+                        <li> <Link href="/Account"> <i className="fas fa-user"></i>{userLogin} </Link> </li> : 
+                        <li> <Link href="/Login"> Login </Link> </li> 
+                    }            
+                </ul> 
+            </div>
+        </div>
+        </header>
     )
 }
+
+ 
