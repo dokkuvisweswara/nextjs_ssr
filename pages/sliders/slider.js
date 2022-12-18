@@ -20,7 +20,7 @@ export default function Slider({ data }) {
         // tabsBox[0].addEventListener("mousedown", () => {isDragging = true;} );
         tabsBox[0].addEventListener("mousemove", dragging);
         // document.addEventListener("mouseup", () => {isDragging = false;});
-    }, []);
+    }, [router.isReady]);
     const handlePrevNext = (isPrevious) => {
             tabsBoxOne.scrollLeft += isPrevious ? -350 : 350;
     }
