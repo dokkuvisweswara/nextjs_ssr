@@ -12,7 +12,7 @@ export default function Section ({ data })  {
       //   // router.query.lang is defined
         
       // }
-    }, [router.isReady])
+    }, [])
     return (
         <>
         {

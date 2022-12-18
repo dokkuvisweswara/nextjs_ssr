@@ -21,7 +21,7 @@ export default function Carousel({ data }) {
             setCarousel(carou);
             actsetUpCarousel(carou);
         });
-    }, [data, id]);
+    }, [data, id, router.isReady]);
 
     function modulo(number, mod) {
         console.log("modulo", number, mod)

@@ -10,8 +10,7 @@ export default function Header() {
     console.log("iiiii", router);
     const primeryMenu = ['Home', 'Shows', 'Comedy', 'Movie', 'Music'];
     useEffect(() => {
-        console.log("iiiii", router.asPath);
-    }, [router.isReady]);
+    }, []);
     const toggMenue = () => {
         const siteNavMenu = document.querySelectorAll('[data-navmenu]');
         console.log("querySelectorAll", siteNavMenu);
