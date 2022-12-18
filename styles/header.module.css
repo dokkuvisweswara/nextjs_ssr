@@ -50,6 +50,12 @@
     padding: 10px 0;
     transition: .5s;
 }
+.PrimaryMenue a i{
+    padding: 5px;
+    border: 2px solid white;
+    border-radius: 50%;
+    font-weight: 500;
+}
 .PrimaryMenue a:hover, .PrimaryMenue .active{
     color:#ff4a44;
 }

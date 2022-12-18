@@ -132,11 +132,11 @@ export default function Carousel({ data }) {
             if (single.length > 0) {
               if (single[0].format && typeof (single[0].format) != 'string') {
                 // return single[0].format['tiles-hd'].source
-                return single[0].format['tiles-sd'].source
+                return single[0].format['tiles-hd'].source
               } else {
                 single = sectionListDetailSingle.filter((img) => {
                   //previously we taking img.type === "system" && img.formet == 'tiles-hd'
-                  if (img.type === 'system' && img.format == 'tiles-sd') {
+                  if (img.type === 'system' && img.format == 'tiles-hd') {
                     return img;
                   }
                   return ''
