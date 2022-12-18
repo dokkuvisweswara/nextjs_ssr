@@ -17,11 +17,11 @@ export default function Details({data}) {
     return(
         <div className={styles.detailsContainer}>
             <div className={styles.detailMainSection}>
-                <div class={styles.deatilsText}>
-                    <h1 class={styles.deatilsTextH1}>{data.titles.default}</h1>
+                <div className={styles.deatilsText}>
+                    <h1 className={styles.deatilsTextH1}>{data.titles.default}</h1>
                     <p>{data.long_descriptions.default}</p>
                 </div>
-                <div class={styles.deatilsImage}>
+                <div className={styles.deatilsImage}>
                     <Image
                         unoptimized
                         src={filterImage(data.images)} 

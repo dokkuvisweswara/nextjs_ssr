@@ -30,7 +30,7 @@ export default function Header() {
                 <ul className={styles.PrimaryMenue}>
                     {
                         primeryMenu.map((item, index) =>(
-                            <li> <Link href={item} className={router.asPath =='/'+item ? styles.active : ""} key={index}> {item} </Link> </li>                            
+                            <li key={index}> <Link href={item} className={router.asPath =='/'+item ? styles.active : ""}> {item} </Link> </li>                            
                         ))
                     }
                 </ul>
