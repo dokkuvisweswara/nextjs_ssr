@@ -23,7 +23,7 @@ export default function Home() {
     } else {
       setUserLogged(true);
     }
-  }, [router.isReady])
+  }, [router.isReady, user])
   const handleToggle = () => {
     setMobile(!mobile);
   }
