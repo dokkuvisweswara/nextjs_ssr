@@ -1,6 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { HYDRATE, createWrapper  } from "next-redux-wrapper";
-import profile from '../redux/store/profileSlice';
+import profile from './store/profileSlice';
 
 const combinedReducer = combineReducers({
   profile

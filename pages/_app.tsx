@@ -26,7 +26,7 @@
 import React, {FC} from 'react';
 import {Provider} from 'react-redux';
 import {AppProps} from 'next/app';
-import {wrapper} from './store';
+import {wrapper} from '../redux/store';
 
 import PrimarySearchAppBar from './Header/Header';
 import Footer from './Footer/Footer';

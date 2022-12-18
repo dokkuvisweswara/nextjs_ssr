@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import Router from 'next/router';
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../store";
+import { RootState } from "../../redux/store";
 import { SET_PROFILE_NAME } from "../../redux/store/profileSlice";
 import { useState } from "react";
 
