@@ -28,12 +28,10 @@ import {Provider} from 'react-redux';
 import {AppProps} from 'next/app';
 import {wrapper} from '../redux/store';
 
-import PrimarySearchAppBar from './Header/Header';
-import Footer from './Footer/Footer';
 import styles from '../styles/Home.module.css';
 import '../styles/globals.css';
 import Head from 'next/head';
-
+import Layout from '../components/Layout';
 const MyApp: FC<AppProps> = ({Component, ...rest}) => {
     const {store, props} = wrapper.useWrappedStore(rest);
     return (
@@ -45,11 +43,10 @@ const MyApp: FC<AppProps> = ({Component, ...rest}) => {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
         </Head>
         <Provider store={store}>
-          <PrimarySearchAppBar />
-         <div className={styles.container}>
+            <Layout><Component {...props.pageProps} /></Layout>
+         {/* <div className={styles.container}>
             <Component {...props.pageProps} />
-         </div>
-         <Footer />
+         </div> */}
         </Provider>
         </>
     );

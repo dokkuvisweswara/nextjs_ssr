@@ -3,8 +3,8 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import Switch from "@mui/material/Switch";
 import { useEffect, useState } from 'react';
-import ComponentOne from './components/ComponentOne';
-import ComponentTwo from './components/ComponentTwo';
+import ComponentOne from '../components/ComponentOne';
+import ComponentTwo from '../components/ComponentTwo';
 import loadConfig from 'next/dist/server/config';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';

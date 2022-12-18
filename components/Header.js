@@ -1,4 +1,4 @@
-import styles from '../../styles/header.module.css';
+import styles from '../styles/header.module.css';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";

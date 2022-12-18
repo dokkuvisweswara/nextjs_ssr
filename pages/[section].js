@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router';
 import { pid } from 'process';
 import { useEffect, useState } from 'react';
-import Carousel from './Carousel/index';
-import Slider from './sliders/slider.js';
+import Carousel from '../components/Carousel';
+import Slider from '../components/Slider';
 import styles from '../styles/Home.module.css';
 
 export default function Section ({ data })  {
@@ -49,7 +49,6 @@ export async function getServerSideProps(context) {
     );
     const URl = `https://catalogue-ms.cloud.altbalaji.com/v1/list/zuul/catalogue/balaji/catalogue/filters/carousal-`+section+`?domain=IN&limit=10`;
     const response = await fetch(URl);
-    console.error("res", response)
     const content = await response.json();
     let data = [];
     data = content.content ? content.content : [];
