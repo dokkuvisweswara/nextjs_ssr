@@ -1,4 +1,4 @@
-import styles from '../styles/header.module.css';
+import styles from '../styles/Header.module.css';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
@@ -7,13 +7,11 @@ import { useRouter } from "next/router";
 export default function Header() {
     let userLogin = useSelector((state) => state.profile.name);
     const router = useRouter();
-    console.log("iiiii", router);
     const primeryMenu = ['Home', 'Shows', 'Comedy', 'Movie', 'Music'];
     useEffect(() => {
     }, []);
     const toggMenue = () => {
         const siteNavMenu = document.querySelectorAll('[data-navmenu]');
-        console.log("querySelectorAll", siteNavMenu);
         siteNavMenu[0].classList.toggle(styles.mobileMenu);
     }
     return(
@@ -33,10 +31,10 @@ export default function Header() {
                         ))
                     }
                 </ul>
-                <ul className={styles.PrimaryMenue}>
+                <ul className={`${styles.userMenue} ${styles.PrimaryMenue}`}>
                     {
                         userLogin && userLogin!== 'null' ?
-                        <li> <Link href="/Account"> <i className="fas fa-user"></i>{userLogin} </Link> </li> : 
+                        <li> <Link href="/Account"> <i className="fas fa-user"></i> <span>{userLogin}</span> </Link> </li> : 
                         <li> <Link href="/Login"> Login </Link> </li> 
                     }            
                 </ul> 

@@ -3,28 +3,60 @@ import Router from 'next/router';
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
 import { SET_PROFILE_NAME } from "../../redux/store/profileSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Head from "next/head";
+import styles from '../../styles/Login.module.css';
+import Redirect from '../../components/Redirect';
 
-export default  function Login() {
-    const [userName, setUserName] = useState('');
-    const router = useRouter();
-    const name = useSelector((state: RootState) => state.profile.name);
-    const dispacth = useDispatch();
+export default function Login() {
+  const [userName, setUserName] = useState('');
+  const router = useRouter();
+  const user = useSelector((state: RootState) => state.profile.name);
+  const [userLogged, setUserLogged] = useState(true);
+  const dispacth = useDispatch();
 
-    console.log("----", name);
-    const handleSubmit = () => {
-      localStorage.setItem('userName', userName);
-      dispacth(SET_PROFILE_NAME(userName));
-      Router.push('/');
-      }
-    return(
-      <div>
-        <main>
-          <h1>Profile name is : {name}</h1>
-          <input type="text" name="name" value={userName} onChange={(event) => setUserName(event.target.value)} placeholder="userName" /><br/>
-          <input type="password" name="password" placeholder="password"/><br/>
-          <button onClick={() =>handleSubmit()}>SUBMIT</button>
-        </main>
-      </div>
+  useEffect(() => {
+    if (user == 'null' || user == null) {
+      setUserLogged(false);
+    } else {
+      setUserLogged(true);
+    }
+  }, [router, user]);
+
+  const handleSubmit = () => {
+    localStorage.setItem('userName', userName);
+    Router.push('/Home');
+    dispacth(SET_PROFILE_NAME(userName));
+  }
+  const loginForm = () => {
+    return (
+      <>
+        <div className={styles.loginForm}>
+          <div className={styles.loginCard}>
+            <div className={styles.loginHeadder}>
+              <h1 className="M0">Login Form</h1>
+            </div>
+            <div className={styles.innerForm}>
+              <input type="text" name="name" value={userName} onChange={(event) => setUserName(event.target.value)} placeholder="userName" />
+              <input type="password" name="password" placeholder="password" />
+              <button onClick={() => handleSubmit()}>LOGIN</button>
+            </div>
+          </div>
+        </div>
+      </>
     )
+  }
+  return (
+    <div className={styles.detailsContainer}>
+      <Head>
+        <title>Login Page</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <main className={styles.main}>
+        {
+          userLogged ? <Redirect user={user}/> : loginForm()
+        }
+      </main>
+    </div>
+  )
 }

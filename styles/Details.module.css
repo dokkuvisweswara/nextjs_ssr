@@ -1,0 +1,38 @@
+.detailsContainer{
+    padding: 0 20px;
+    top: 73px;
+    position: absolute;
+  }
+  .detailMainSection{
+    display: flex;
+    padding: 0 20px ;
+  }
+  .deatilsText{
+    width: 40%;
+    padding: 0 20px;
+  }
+  .deatilsTextH1{
+    margin: 0;
+  }
+  .deatilsImage{
+    width: 60%;
+  }
+  .deatilsImage img{
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+  }
+
+  @media screen and (max-width: 900px) {
+      .detailMainSection{
+        display: flex;
+        flex-direction: column;
+      }
+      .deatilsText{
+        padding: 0;
+        width: 100%;
+      }
+      .deatilsImage{
+        width: 100%;
+      }
+  }

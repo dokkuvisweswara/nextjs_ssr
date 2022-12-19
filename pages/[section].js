@@ -4,10 +4,14 @@ import { useEffect, useState } from 'react';
 import Carousel from '../components/Carousel';
 import Slider from '../components/Slider';
 import styles from '../styles/Home.module.css';
+import Head from 'next/head';
 
 export default function Section ({ data })  {
     const router = useRouter();
+    const section = router.query.section;
     useEffect(() => {
+      console.log("router", router);
+
       // if (router.asPath !== router.route) {
       //   // router.query.lang is defined
         
@@ -15,6 +19,10 @@ export default function Section ({ data })  {
     }, [])
     return (
         <>
+        <Head>
+          <title>{section}</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
         {
           data.length > 0 ? content(data) : Loading()
         }        
@@ -54,6 +62,7 @@ export async function getServerSideProps(context) {
     data = content.content ? content.content : [];
     // Pass data to the page via props
     
+    console.log("dataset  server----", data)
     return { props: { data } }
   }
   

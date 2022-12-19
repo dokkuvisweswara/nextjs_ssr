@@ -40,6 +40,10 @@
     display: inline-block;
     margin: 21px 5px;
 }
+.userMenue li{
+    /* border: 2px solid white;
+    border-radius: 16px; */
+}
 .PrimaryMenue a{
     color:#fff;
     position: relative;
@@ -95,7 +99,7 @@
         float: none;
         position: absolute;
         background: #142440;
-        width: 50%;
+        width: 40%;
         right: 0;
         top: 73px;
         padding: 30px 0px;

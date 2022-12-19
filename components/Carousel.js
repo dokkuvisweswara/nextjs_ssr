@@ -70,6 +70,18 @@ export default function Carousel({ data }) {
         setCurrentSlide(item);
         changeSlide(item);
     }
+    const goToDetailsPage = (data) => {
+        let [contentType, contentId] = data.uid.split('-');
+        const str = data.title;
+        const spacesReplaced = str.replaceAll(' ', '-');
+        if (contentType == 'series') {
+            
+            router.push('show/'+spacesReplaced+'/'+contentId);
+          } else {
+            router.push('media/'+spacesReplaced+'/'+contentId);
+          }
+        // router.push('series/baby-come-naa/242');
+    }
     return (
         <>
             <main style={{ 'width': '100%' }}>
@@ -119,7 +131,6 @@ export default function Carousel({ data }) {
     );
 
     function slider(data, i) {
-        console.log("pppp", data);
         const getHotspotImage = (sectionListDetailSingle) => {
             let single = []
             single = sectionListDetailSingle.filter((img) => {
@@ -146,16 +157,14 @@ export default function Carousel({ data }) {
             }
           }
         return (
-            <>
-                <div className={styles.SLIDE} key={i} id="SLIDE">
-                    <Image unoptimized src={getHotspotImage(data.images)} alt={data.title} width={100} height={200} />
-                    {/* <div className={styles.INFO}>
-                        <h2>Hello</h2>
-                        <p>I am fine what about you</p>
-                        <span>Info</span><span>Play</span><span>+</span>
-                    </div> */}
-                </div>
-            </>
+            <div className={styles.SLIDE} key={i} id="SLIDE" onClick={()=>goToDetailsPage(data)}>
+                <Image unoptimized src={getHotspotImage(data.images)} alt={data.title} width={100} height={200} key={i}/>
+                {/* <div className={styles.INFO}>
+                    <h2>Hello</h2>
+                    <p>I am fine what about you</p>
+                    <span>Info</span><span>Play</span><span>+</span>
+                </div> */}
+            </div>
         )
     }
 }

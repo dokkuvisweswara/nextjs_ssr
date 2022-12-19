@@ -1,8 +1,7 @@
-import styles from '../styles/Home.module.css';
+import styles from '../styles/Details.module.css';
 import Image from 'next/image';
 
 export default function Details({data}) {
-    console.log("data", data);
     const filterImage = (images) => {
         var targetImage = "";
         if (images) {
@@ -18,7 +17,7 @@ export default function Details({data}) {
         <div className={styles.detailsContainer}>
             <div className={styles.detailMainSection}>
                 <div className={styles.deatilsText}>
-                    <h1 className={styles.deatilsTextH1}>{data.titles.default}</h1>
+                    <h1 className='M0'>{data.titles.default}</h1>
                     <p>{data.long_descriptions.default}</p>
                 </div>
                 <div className={styles.deatilsImage}>
@@ -37,12 +36,19 @@ export default function Details({data}) {
 
 export async function getServerSideProps(context) {
      // Fetch data from external API 
-    //  const section = context && context.query && context.query.section.toLowerCase();
+    const section = context && context.query && context.query.details;
+    let sectionName = '';
+    console.log("section", section);
+    if(section[0] == 'show'){
+      sectionName = 'series';
+    }else if(section[0] == 'media'){
+      sectionName = 'videos';
+    }
      context.res.setHeader(
        'Cache-Control',
        'public, s-maxage=100, stale-while-revalidate=59'
      );
-     const URl = "https://api.cloud.altbalaji.com/media/series/365?domain=IN";
+     const URl = `https://api.cloud.altbalaji.com/media/`+sectionName+`/`+section[2]+`?domain=IN`;
      const response = await fetch(URl);
      console.error("res", response)
      const content = await response.json();

@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import styles from '../styles/Home.module.css'
-import Switch from "@mui/material/Switch";
+import styles from '../styles/Home.module.css';
 import { useEffect, useState } from 'react';
 import ComponentOne from '../components/ComponentOne';
 import ComponentTwo from '../components/ComponentTwo';
@@ -35,7 +34,7 @@ export default function Home() {
       {
         !userLogged ? <div>loading....</div> :
         <div>   
-          <Switch {...label} onClick={handleToggle}/>
+          {/* <Switch {...label} onClick={handleToggle}/> */}
           {
             mobile ? <ComponentOne /> : <ComponentTwo />
           }
