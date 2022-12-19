@@ -10,8 +10,6 @@ export default function Section ({ data })  {
     const router = useRouter();
     const section = router.query.section;
     useEffect(() => {
-      console.log("router", router);
-
       // if (router.asPath !== router.route) {
       //   // router.query.lang is defined
         
