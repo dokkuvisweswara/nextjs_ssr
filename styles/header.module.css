@@ -40,10 +40,10 @@
     display: inline-block;
     margin: 21px 5px;
 }
-.userMenue li{
-    /* border: 2px solid white;
-    border-radius: 16px; */
-}
+/* .userMenue li{
+    border: 2px solid white;
+    border-radius: 16px;
+} */
 .PrimaryMenue a{
     color:#fff;
     position: relative;

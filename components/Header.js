@@ -31,7 +31,7 @@ export default function Header() {
                         ))
                     }
                 </ul>
-                <ul className={`${styles.userMenue} ${styles.PrimaryMenue}`}>
+                <ul className={styles.PrimaryMenue}>
                     {
                         userLogin && userLogin!== 'null' ?
                         <li> <Link href="/Account"> <i className="fas fa-user"></i> <span>{userLogin}</span> </Link> </li> : 
