@@ -26,9 +26,11 @@
 }
 .TABSBOX.dragging .TAB{
   user-select: none;
+  height: 100% !important;
 }
 .TABSBOX.dragging .TAB img{
   user-select: none;
+  
 }
 .TABSBOX .TAB{
     margin: 0 5px;

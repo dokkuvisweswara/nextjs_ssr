@@ -53,7 +53,7 @@ export async function getServerSideProps(context) {
     let sectionId = '';
     context.res.setHeader(
       'Cache-Control',
-      'public, s-maxage=1000, stale-while-revalidate=120'
+      'public, s-maxage=100, stale-while-revalidate=59'
     );
     const configUrl = 'https://realtimedatabasesumit.firebaseio.com/alt.json';
     const configRes = await fetch(configUrl);
@@ -70,8 +70,8 @@ export async function getServerSideProps(context) {
     console.log("dataset----", sectionId);
     let first = sectionData.slice(0, 2);
     console.log("dataset  server----", first);
-    const URl = `https://catalogue-ms.cloud.altbalaji.com/v1/list`+first[0]['external_id']+`?domain=IN&limit=10`;
-    let thumbNailUrl = `https://catalogue-ms.cloud.altbalaji.com/v1/list`+first[1]['external_id']+`?domain=IN&limit=10`;
+    const URl = `https://catalogue-ms.cloud.altbalaji.com/v1/list`+first[0]['external_id']+`?domain=IN&size=10&page=1`;
+    let thumbNailUrl = `https://catalogue-ms.cloud.altbalaji.com/v1/list`+first[1]['external_id']+`?domain=IN&size=10&page=1`;
     // if(section == 'home'){
     //   thumbNailUrl = 'https://catalogue-ms.cloud.altbalaji.com/v1/list/zuul/catalogue/balaji/catalogue/filters/trending-home-1?domain=IN&limit=10';
     // }else {
