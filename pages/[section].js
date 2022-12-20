@@ -3,6 +3,7 @@ import { pid } from 'process';
 import { useEffect, useState } from 'react';
 import Carousel from '../components/Carousel';
 import Slider from '../components/Slider';
+import Gridview from '../components/Gridview';
 import styles from '../styles/Home.module.css';
 import Head from 'next/head';
 
@@ -22,7 +23,7 @@ export default function Section ({ data })  {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         {
-          data.length > 0 ? content(data) : Loading()
+           data.length > 0 ? content(data) : Loading()
         }        
         </>
     )
@@ -30,8 +31,8 @@ export default function Section ({ data })  {
 export function content(data) {
   return(
     <>
-      <Carousel data={data} />
-      <Slider data={data} />
+      <Carousel data={data[1]} />
+      {data[0].length > 2 ? <Slider data={data[2]} /> : <Gridview data={data[2]}/>}
     </>
   )
 }
@@ -45,22 +46,39 @@ export function Loading() {
   )
 }
 
-
+//ServerSide Props....
 export async function getServerSideProps(context) {
     // Fetch data from external API 
+    const sectionId = {home:41, shows:21, movie:22, comedy:42}
     const section = context && context.query && context.query.section.toLowerCase();
     context.res.setHeader(
       'Cache-Control',
       'public, s-maxage=100, stale-while-revalidate=59'
     );
+    console.log("=+=", sectionId[section]);
+    const sectionUrl = `https://api.cloud.altbalaji.com/sections/`+sectionId[section]+`?domain=IN&limit=50`;
     const URl = `https://catalogue-ms.cloud.altbalaji.com/v1/list/zuul/catalogue/balaji/catalogue/filters/carousal-`+section+`?domain=IN&limit=10`;
-    const response = await fetch(URl);
-    const content = await response.json();
+    let thumbNailUrl = '';
+    if(section == 'home'){
+      thumbNailUrl = 'https://catalogue-ms.cloud.altbalaji.com/v1/list/zuul/catalogue/balaji/catalogue/filters/trending-home-1?domain=IN&limit=10';
+    }else {
+      thumbNailUrl = `https://catalogue-ms.cloud.altbalaji.com/v1/list/zuul/catalogue/balaji/catalogue/filters/all-`+section+`?domain=IN&limit=10`
+    }
+    
+    const sectionRes = await fetch(sectionUrl);
+    const caroselRes = await fetch(URl);
+    const thumbNailRes = await fetch(thumbNailUrl);
+    const sectionContent = await sectionRes.json();
+    const caroselContent = await caroselRes.json();
+    const thumbnailContent = await thumbNailRes.json();
     let data = [];
-    data = content.content ? content.content : [];
+    let sectionData = sectionContent.lists ? sectionContent.lists : [];
+    let caroselData = caroselContent.content ? caroselContent.content : [];
+    let thumbNailData = thumbnailContent.content ? thumbnailContent.content : [];
+    data = data.concat([sectionData], [caroselData], [thumbNailData]);
     // Pass data to the page via props
     
-    console.log("dataset  server----", data)
+    console.log("dataset  server----", thumbNailData)
     return { props: { data } }
-  }
+  };
   

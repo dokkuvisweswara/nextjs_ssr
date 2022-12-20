@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 export default function Header() {
     let userLogin = useSelector((state) => state.profile.name);
     const router = useRouter();
-    const primeryMenu = ['Home', 'Shows', 'Comedy', 'Movie', 'Music'];
+    const primeryMenu = ['Home', 'Shows', 'Comedy', 'Movie'];
     useEffect(() => {
     }, []);
     const toggMenue = () => {
@@ -27,15 +27,15 @@ export default function Header() {
                 <ul className={styles.PrimaryMenue}>
                     {
                         primeryMenu.map((item, index) =>(
-                            <li key={index}> <Link href={item} className={router.asPath =='/'+item ? styles.active : ""}> {item} </Link> </li>                            
+                            <li key={index} onClick={() => toggMenue()}> <Link href={item} className={router.asPath =='/'+item ? styles.active : ""}> {item} </Link> </li>                            
                         ))
                     }
                 </ul>
                 <ul className={styles.PrimaryMenue}>
                     {
                         userLogin && userLogin!== 'null' ?
-                        <li> <Link href="/Account"> <i className="fas fa-user"></i> <span>{userLogin}</span> </Link> </li> : 
-                        <li> <Link href="/Login"> Login </Link> </li> 
+                        <li onClick={() => toggMenue()}> <Link href="/Login"> <i className="fas fa-user"></i> <span>{userLogin}</span> </Link> </li> : 
+                        <li onClick={() => toggMenue()}> <Link href="/Login"> Login </Link> </li> 
                     }            
                 </ul> 
             </div>

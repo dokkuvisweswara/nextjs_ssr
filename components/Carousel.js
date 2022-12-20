@@ -17,7 +17,6 @@ export default function Carousel({ data }) {
         setNumSlides(0);
         const carousels = document.querySelectorAll('[data-carousel]');
         carousels.forEach((carou, index) => {
-            console.log("carou", carou)
             setCarousel(carou);
             actsetUpCarousel(carou);
         });
@@ -83,8 +82,7 @@ export default function Carousel({ data }) {
         // router.push('series/baby-come-naa/242');
     }
     return (
-        <>
-            <main style={{ 'width': '100%' }}>
+            <div style={{ 'width': '100%' }}>
                 <div className={styles.carousel} data-carousel>
                     {data && data.length > 0 ?
                         <>
@@ -126,8 +124,7 @@ export default function Carousel({ data }) {
                         : <h1>Loading.....</h1>
                     }
                 </div>
-            </main>
-        </>
+            </div>
     );
 
     function slider(data, i) {
@@ -143,11 +140,11 @@ export default function Carousel({ data }) {
             if (single.length > 0) {
               if (single[0].format && typeof (single[0].format) != 'string') {
                 // return single[0].format['tiles-hd'].source
-                return single[0].format['tiles-hd'].source
+                return single[0].format['tiles-sd'].source
               } else {
                 single = sectionListDetailSingle.filter((img) => {
                   //previously we taking img.type === "system" && img.formet == 'tiles-hd'
-                  if (img.type === 'system' && img.format == 'tiles-hd') {
+                  if (img.type === 'system' && img.format == 'tiles-sd') {
                     return img;
                   }
                   return ''

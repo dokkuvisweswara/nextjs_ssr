@@ -52,7 +52,7 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  /* object-fit: cover; */
   cursor: pointer;
 }
 .SLIDER .SLIDE .INFO{
@@ -147,10 +147,15 @@
 .NAVIGATIONVISIBILITY .SLIDEICON:hover {
   cursor: pointer;
 }
-
+@media screen and (max-width: 1024px) {
+  .SLIDER{
+    height: 50vh;
+  }
+}
 @media screen and (max-width: 900px) {
   .SLIDER{
     width: 100%;
+    height: 63vh;
   }
   .SLIDER .SLIDE .INFO{
     position: relative;
@@ -159,7 +164,16 @@
     margin-right: auto;
   }
 }
-
+@media screen and (max-width: 468px) {
+  .SLIDER{
+    height: 30vh;
+  }
+}
+@media (min-width: 469px) and (max-width: 768px) {
+  .SLIDER{
+    height: 40vh;
+  }
+}
 .textDecoration{
   text-decoration: underline;
 }
