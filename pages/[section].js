@@ -60,30 +60,35 @@ export async function getServerSideProps(context) {
     const configContent = await configRes.json();
     configContent.map((x, i)=>{if(x.title == context.query.section){
       sectionId = x.sectionID;
+      debugger;
+      console.log("dataset----", sectionId);
     }})
     const sectionUrl = `https://api.cloud.altbalaji.com/sections/`+sectionId+`?domain=IN&limit=10`;
-    const URl = `https://catalogue-ms.cloud.altbalaji.com/v1/list/zuul/catalogue/balaji/catalogue/filters/carousal-`+section+`?domain=IN&limit=10`;
-    let thumbNailUrl = '';
-    if(section == 'home'){
-      thumbNailUrl = 'https://catalogue-ms.cloud.altbalaji.com/v1/list/zuul/catalogue/balaji/catalogue/filters/trending-home-1?domain=IN&limit=10';
-    }else {
-      thumbNailUrl = `https://catalogue-ms.cloud.altbalaji.com/v1/list/zuul/catalogue/balaji/catalogue/filters/all-`+section+`?domain=IN&limit=10`
-    }
+    const sectionRes = await fetch(sectionUrl);    
+    const sectionContent = await sectionRes.json();
+    const sectionData = sectionContent.lists ? sectionContent.lists : [];    
+    console.log("dataset----", sectionId);
+    let first = sectionData.slice(0, 2);
+    console.log("dataset  server----", first);
+    const URl = `https://catalogue-ms.cloud.altbalaji.com/v1/list`+first[0]['external_id']+`?domain=IN&limit=10`;
+    let thumbNailUrl = `https://catalogue-ms.cloud.altbalaji.com/v1/list`+first[1]['external_id']+`?domain=IN&limit=10`;
+    // if(section == 'home'){
+    //   thumbNailUrl = 'https://catalogue-ms.cloud.altbalaji.com/v1/list/zuul/catalogue/balaji/catalogue/filters/trending-home-1?domain=IN&limit=10';
+    // }else {
+    //   thumbNailUrl = `https://catalogue-ms.cloud.altbalaji.com/v1/list/zuul/catalogue/balaji/catalogue/filters/all-`+section+`?domain=IN&limit=10`
+    // }
     
-    const sectionRes = await fetch(sectionUrl);
     const caroselRes = await fetch(URl);
     const thumbNailRes = await fetch(thumbNailUrl);
-    const sectionContent = await sectionRes.json();
     const caroselContent = await caroselRes.json();
     const thumbnailContent = await thumbNailRes.json();
     let data = [];
-    let sectionData = sectionContent.lists ? sectionContent.lists : [];
     let caroselData = caroselContent.content ? caroselContent.content : [];
     let thumbNailData = thumbnailContent.content ? thumbnailContent.content : [];
     data = data.concat([sectionData], [caroselData], [thumbNailData]);
     // Pass data to the page via props
     
-    console.log("dataset  server----", thumbNailData)
+    console.log("dataset  server----", thumbNailData);
     return { props: { data } }
   };
   

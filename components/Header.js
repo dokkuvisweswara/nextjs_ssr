@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 export default function Header() {
     let userLogin = useSelector((state) => state.profile.name);
     const router = useRouter();
-    const primeryMenu = ['Home', 'Shows', 'Comedy', 'Movie'];
+    const primeryMenu = ['Home', 'Shows', 'Comedy', 'Movies'];
     useEffect(() => {
     }, []);
     const toggMenue = () => {

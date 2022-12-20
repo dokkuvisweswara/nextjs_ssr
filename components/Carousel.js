@@ -155,7 +155,13 @@ export default function Carousel({ data }) {
           }
         return (
             <div className={styles.SLIDE} key={i} id="SLIDE" onClick={()=>goToDetailsPage(data)}>
-                <Image unoptimized src={getHotspotImage(data.images)} alt={data.title} width={100} height={200} key={i}/>
+                <Image 
+                    unoptimized 
+                    src={getHotspotImage(data.images)} 
+                    alt={data.title} 
+                    width={100} height={200} 
+                    key={i}
+                    loading="lazy"/>
                 {/* <div className={styles.INFO}>
                     <h2>Hello</h2>
                     <p>I am fine what about you</p>
