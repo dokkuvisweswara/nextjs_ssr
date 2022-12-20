@@ -49,14 +49,19 @@ export function Loading() {
 //ServerSide Props....
 export async function getServerSideProps(context) {
     // Fetch data from external API 
-    const sectionId = {home:41, shows:21, movie:22, comedy:42}
     const section = context && context.query && context.query.section.toLowerCase();
+    let sectionId = '';
     context.res.setHeader(
       'Cache-Control',
-      'public, s-maxage=100, stale-while-revalidate=59'
+      'public, s-maxage=1000, stale-while-revalidate=120'
     );
-    console.log("=+=", sectionId[section]);
-    const sectionUrl = `https://api.cloud.altbalaji.com/sections/`+sectionId[section]+`?domain=IN&limit=50`;
+    const configUrl = 'https://realtimedatabasesumit.firebaseio.com/alt.json';
+    const configRes = await fetch(configUrl);
+    const configContent = await configRes.json();
+    configContent.map((x, i)=>{if(x.title == context.query.section){
+      sectionId = x.sectionID;
+    }})
+    const sectionUrl = `https://api.cloud.altbalaji.com/sections/`+sectionId+`?domain=IN&limit=10`;
     const URl = `https://catalogue-ms.cloud.altbalaji.com/v1/list/zuul/catalogue/balaji/catalogue/filters/carousal-`+section+`?domain=IN&limit=10`;
     let thumbNailUrl = '';
     if(section == 'home'){
