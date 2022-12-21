@@ -1,7 +1,6 @@
 .detailsContainer{
+    margin-top: 73px;
     padding: 0 20px;
-    top: 73px;
-    position: absolute;
   }
   .detailMainSection{
     display: flex;

@@ -1,11 +1,12 @@
 
 .headerArea{
-    background-color: rgba(0, 0, 0, 0.1);
+    /* background-color: rgba(0, 0, 0, 0.1); */
     position: fixed;
     width: 100%;
     padding: 0 30px;
     z-index:  999;
     border-bottom: #909090ad;
+    background: #142440;
 }
 .headerContainer{
     width: 100%;
@@ -16,12 +17,9 @@
     float: left;
     padding: 9px 0px;
 }
-.siteLogo a{
-    color: #fff;
-    text-decoration: none;
-    font-size: 24px;
-    font-weight: 600;
-    padding: 15px;
+.siteLogo img{
+    height: 100%;
+    width: 100%;
 }
 .mobileNav{
     display: none;
@@ -93,6 +91,11 @@
 /* Responsive css */
 
 @media only screen and (max-width: 900px){
+    .headerContainer{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
     .siteNavMenu{
         display: flex;
         flex-direction: column;
