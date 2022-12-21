@@ -162,7 +162,8 @@ export default function Carousel({ data }) {
                     alt={data.title} 
                     width={100} height={200} 
                     key={i}
-                    loading="lazy"/>
+                    loading="lazy"
+                    />
                 {/* <div className={styles.INFO}>
                     <h2>Hello</h2>
                     <p>I am fine what about you</p>

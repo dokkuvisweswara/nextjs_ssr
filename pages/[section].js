@@ -98,6 +98,7 @@ export async function getServerSideProps(context) {
     if(data.length >=0){
       return filteredArray = data.map((item, index)=> {
         let filteredData = {};
+        filteredData.uid = item.uid;
         filteredData.id = item.id;
         filteredData.title = item.title;
         filteredData.image = getHotspotImage(item.images);
@@ -112,6 +113,7 @@ export async function getServerSideProps(context) {
     if(data.length >=0){
       return filteredArray = data.map((item, index)=> {
         let filteredData = {};
+        filteredData.uid = item.uid;
         filteredData.id = item.id;
         filteredData.title = item.title;
         filteredData.image = item.images[0].url;
