@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import Head from "next/head";
 
 export default function Carousel({ data }) {
+    console.log("data--", data);
     const router = useRouter();
     const { id } = router.query;
     let [currentSlide, setCurrentSlide] = useState(0);
@@ -128,36 +129,36 @@ export default function Carousel({ data }) {
     );
 
     function slider(data, i) {
-        const getHotspotImage = (sectionListDetailSingle) => {
-            let single = []
-            single = sectionListDetailSingle.filter((img) => {
-              if (img.type === 'system') {
-                return img;
-              }
-              return ''
-            });
+        // const getHotspotImage = (sectionListDetailSingle) => {
+        //     let single = []
+        //     single = sectionListDetailSingle.filter((img) => {
+        //       if (img.type === 'system') {
+        //         return img;
+        //       }
+        //       return ''
+        //     });
         
-            if (single.length > 0) {
-              if (single[0].format && typeof (single[0].format) != 'string') {
-                // return single[0].format['tiles-hd'].source
-                return single[0].format['tiles-sd'].source
-              } else {
-                single = sectionListDetailSingle.filter((img) => {
-                  //previously we taking img.type === "system" && img.formet == 'tiles-hd'
-                  if (img.type === 'system' && img.format == 'tiles-sd') {
-                    return img;
-                  }
-                  return ''
-                });
-                return single[0].url;
-              }
-            }
-          }
+        //     if (single.length > 0) {
+        //       if (single[0].format && typeof (single[0].format) != 'string') {
+        //         // return single[0].format['tiles-hd'].source
+        //         return single[0].format['tiles-sd'].source
+        //       } else {
+        //         single = sectionListDetailSingle.filter((img) => {
+        //           //previously we taking img.type === "system" && img.formet == 'tiles-hd'
+        //           if (img.type === 'system' && img.format == 'tiles-sd') {
+        //             return img;
+        //           }
+        //           return ''
+        //         });
+        //         return single[0].url;
+        //       }
+        //     }
+        //   }
         return (
             <div className={styles.SLIDE} key={i} id="SLIDE" onClick={()=>goToDetailsPage(data)}>
                 <Image 
                     unoptimized 
-                    src={getHotspotImage(data.images)} 
+                    src={data.image} 
                     alt={data.title} 
                     width={100} height={200} 
                     key={i}

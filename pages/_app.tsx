@@ -43,13 +43,13 @@ const MyApp: FC<AppProps> = ({Component, ...rest}) => {
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossOrigin="anonymous" referrerPolicy="no-referrer" />
         </Head>
         <Provider store={store}>
-            <Layout><Component {...props.pageProps} /></Layout>
-         {/* <div className={styles.container}>
-            <Component {...props.pageProps} />
-         </div> */}
+            <Layout>
+                <Component {...props.pageProps} />
+            </Layout>
         </Provider>
         </>
     );
 };
 
-export default MyApp;
+// export default MyApp;
+export default wrapper.withRedux(MyApp);

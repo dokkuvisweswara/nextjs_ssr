@@ -58,7 +58,7 @@ export default function Slider({ data }) {
             <div className={styles.TAB} onClick={()=>goToDetailsPage(item)} key={index}>
                 <Image 
                     unoptimized 
-                    src={item.images[0].url} 
+                    src={item.image} 
                     alt={item.title}
                     width={200}
                     height={300}

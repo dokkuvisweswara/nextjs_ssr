@@ -83,12 +83,67 @@ export async function getServerSideProps(context) {
     const caroselContent = await caroselRes.json();
     const thumbnailContent = await thumbNailRes.json();
     let data = [];
-    let caroselData = caroselContent.content ? caroselContent.content : [];
-    let thumbNailData = thumbnailContent.content ? thumbnailContent.content : [];
+    let caroselData = await actACrouselData(caroselContent.content ? caroselContent.content : []);
+    console.log("dataset  server----", caroselData);
+    let thumbNailData = await actAthumbnailData(thumbnailContent.content ? thumbnailContent.content : []);
     data = data.concat([sectionData], [caroselData], [thumbNailData]);
     // Pass data to the page via props
     
-    console.log("dataset  server----", thumbNailData);
+    // console.log("dataset  server----", caroselData);
     return { props: { data } }
   };
+
+  export async function actACrouselData(data) {
+    let filteredArray = [];
+    if(data.length >=0){
+      return filteredArray = data.map((item, index)=> {
+        let filteredData = {};
+        filteredData.id = item.id;
+        filteredData.title = item.title;
+        filteredData.image = getHotspotImage(item.images);
+        return filteredData;
+      });       
+    }else{ 
+      return [];
+    }
+  }
+  export async function actAthumbnailData(data) {
+    let filteredArray = [];
+    if(data.length >=0){
+      return filteredArray = data.map((item, index)=> {
+        let filteredData = {};
+        filteredData.id = item.id;
+        filteredData.title = item.title;
+        filteredData.image = item.images[0].url;
+        return filteredData;
+      });       
+    }else{ 
+      return [];
+    }
+  }
+  export const getHotspotImage = (sectionListDetailSingle) => {
+    let single = []
+    single = sectionListDetailSingle.filter((img) => {
+      if (img.type === 'system') {
+        return img;
+      }
+      return ''
+    });
+
+    if (single.length > 0) {
+      if (single[0].format && typeof (single[0].format) != 'string') {
+        // return single[0].format['tiles-hd'].source
+        return single[0].format['tiles-sd'].source
+      } else {
+        single = sectionListDetailSingle.filter((img) => {
+          //previously we taking img.type === "system" && img.formet == 'tiles-hd'
+          if (img.type === 'system' && img.format == 'tiles-sd') {
+            return img;
+          }
+          return ''
+        });
+        return single[0].url;
+      }
+    }
+  }
   
