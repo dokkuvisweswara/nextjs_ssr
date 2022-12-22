@@ -44,6 +44,7 @@
   transition: transform 0.5s;
   transform: translateX(calc(-100% * var(--current-slide)));
   height: 85vh;
+  position: relative;
 }
 .SLIDER .SLIDE{
   flex: 0 0 100%;

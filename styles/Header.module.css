@@ -16,6 +16,7 @@
 .siteLogo{
     float: left;
     padding: 9px 0px;
+    position: relative;
 }
 .siteLogo img{
     height: 100%;

@@ -15,6 +15,7 @@
   }
   .deatilsImage{
     width: 60%;
+    position: relative;
   }
   .deatilsImage img{
     width: 100%;
