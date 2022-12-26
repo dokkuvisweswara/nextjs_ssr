@@ -19,7 +19,8 @@ export default function Section ({ data })  {
     return (
         <>
         <Head>
-          <title>{section}</title>
+          <title>{data[3].tabTitle}</title>
+          <meta name="description" content={data[3].tabDescription} />
           <link rel="icon" href="/favicon.ico" />
         </Head>
         {
@@ -37,6 +38,7 @@ export function content(data) {
   )
 }
 export function Loading() {
+  alert("hello___Loading");
   return(
     <>
     <div className={styles.loading}>
@@ -51,6 +53,7 @@ export async function getServerSideProps(context) {
     // Fetch data from external API 
     const section = context && context.query && context.query.section.toLowerCase();
     let sectionId = '';
+    let consfigInfo = [];
     context.res.setHeader(
       'Cache-Control',
       'public, s-maxage=100, stale-while-revalidate=59'
@@ -60,16 +63,15 @@ export async function getServerSideProps(context) {
     const configContent = await configRes.json();
     configContent.map((x, i)=>{if(x.title == context.query.section){
       sectionId = x.sectionID;
-      debugger;
-      console.log("dataset----", sectionId);
+      consfigInfo = x;
     }})
     const sectionUrl = `https://api.cloud.altbalaji.com/sections/`+sectionId+`?domain=IN&limit=10`;
     const sectionRes = await fetch(sectionUrl);    
     const sectionContent = await sectionRes.json();
     const sectionData = sectionContent.lists ? sectionContent.lists : [];    
-    console.log("dataset----", sectionId);
+    // console.log("dataset----", sectionId);
     let first = sectionData.slice(0, 2);
-    console.log("dataset  server----", first);
+    // console.log("dataset  server----", first);
     const URl = `https://catalogue-ms.cloud.altbalaji.com/v1/list`+first[0]['external_id']+`?domain=IN&size=10&page=1`;
     let thumbNailUrl = `https://catalogue-ms.cloud.altbalaji.com/v1/list`+first[1]['external_id']+`?domain=IN&size=10&page=1`;
     // if(section == 'home'){
@@ -84,12 +86,12 @@ export async function getServerSideProps(context) {
     const thumbnailContent = await thumbNailRes.json();
     let data = [];
     let caroselData = await actACrouselData(caroselContent.content ? caroselContent.content : []);
-    console.log("dataset  server----", caroselData);
+    // console.log("dataset  server----", caroselData);
     let thumbNailData = await actAthumbnailData(thumbnailContent.content ? thumbnailContent.content : []);
-    data = data.concat([sectionData], [caroselData], [thumbNailData]);
+    data = data.concat([sectionData], [caroselData], [thumbNailData], [consfigInfo]);
     // Pass data to the page via props
     
-    // console.log("dataset  server----", caroselData);
+    // console.log("dataset  server----", data[3]);
     return { props: { data } }
   };
 

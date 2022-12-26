@@ -1,20 +1,31 @@
 import styles from '../styles/Header.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
+import { staticMenu } from '../menu.js';
 
 export default function Header() {
     let userLogin = useSelector((state) => state.profile.name);
     const router = useRouter();
-    const primeryMenu = ['Home', 'Shows', 'Comedy', 'Movies'];
+    const [staticMenue, setStaticMenue] = useState(staticMenu);
+    const isSSR = () => typeof window  == 'undefined';
     useEffect(() => {
+        if(isSSR) return ;
+        else actConfigApi();
     }, []);
     const toggMenue = () => {
         const siteNavMenu = document.querySelectorAll('[data-navmenu]');
         siteNavMenu[0].classList.toggle(styles.mobileMenu);
+    };
+    const actConfigApi = async () => {
+        debugger;
+        const fetch = await fetch(`https://d2xowqqrpfxxjf.cloudfront.net/noorplay/web-noorplayv2.json`);
+        const response = await fetch.json();
+        setStaticMenue(response.menu);
     }
+
     return(
         <header className={styles.headerArea}>
         <div className={styles.headerContainer}>
@@ -22,6 +33,7 @@ export default function Header() {
                 <Image 
                     unoptimized
                     src="https://www.mobiotics.com/static/media/MobioticsLogo.aef4f60398cf176c355e86288c27b9ce.svg"
+                    alt='mobiotics logo'
                     width={100}
                     height={100}
                     loading="lazy"
@@ -33,8 +45,8 @@ export default function Header() {
             <div className={styles.siteNavMenu} data-navmenu>
                 <ul className={styles.PrimaryMenue}>
                     {
-                        primeryMenu.map((item, index) =>(
-                            <li key={index} onClick={() => toggMenue()}> <Link href={item} className={router.asPath =='/'+item ? styles.active : ""}> {item} </Link> </li>                            
+                       staticMenue && staticMenue.map((item, index) =>(
+                        item.dataType == "CONTENT" && <li key={index} onClick={() => toggMenue()}> <Link href={item.title.default} className={router.asPath =='/'+item.title.default.toLowerCase() ? styles.active : ""}> {item.title.default} </Link> </li>                            
                         ))
                     }
                 </ul>

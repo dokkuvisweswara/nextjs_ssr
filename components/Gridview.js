@@ -4,7 +4,6 @@ import styles from '../styles/Slider.module.css';
 import Image from 'next/image';
 
 export default function GridView({data}) {
-    console.log("data", data);
     const router = useRouter();
     const [tabsBoxOne, setTabsBoxOne] = useState(false);
     useEffect(() => {

@@ -34,6 +34,7 @@ import Head from 'next/head';
 import Layout from '../components/Layout';
 const MyApp: FC<AppProps> = ({Component, ...rest}) => {
     const {store, props} = wrapper.useWrappedStore(rest);
+    console.log("00000", store, props);
     return (
         <>
         <Head>   

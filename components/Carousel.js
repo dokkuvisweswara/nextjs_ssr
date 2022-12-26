@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import Head from "next/head";
 
 export default function Carousel({ data }) {
-    console.log("data--", data);
     const router = useRouter();
     const { id } = router.query;
     let [currentSlide, setCurrentSlide] = useState(0);
