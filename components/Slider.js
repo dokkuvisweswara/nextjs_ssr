@@ -5,7 +5,9 @@ import styles from '../styles/Slider.module.css';
 import Image from 'next/image';
 
 export default function Slider({ data }) {
+    console.log("data===", data);
     const router = useRouter();
+    const emptyData = [1, 2, 3, 4]
     const [tabsBoxOne, setTabsBoxOne] = useState(false);
     useEffect(() => {
         let isDragging = false;
@@ -24,14 +26,16 @@ export default function Slider({ data }) {
             tabsBoxOne.scrollLeft += isPrevious ? -350 : 350;
     }
     const goToDetailsPage = (data) => {
-        let [contentType, contentId] = data.uid.split('-');
+        let contentType = data.uid;
+        let contentId = data.id;
         const str = data.title;
         const spacesReplaced = str.replaceAll(' ', '-');
-        if (contentType == 'series') {
+        router.push('show/'+spacesReplaced+'/'+contentId);
+        if (contentType == "TVSHOW") {
             
-            router.push('show/'+spacesReplaced+'/'+contentId);
+            router.push('series/'+spacesReplaced+'/'+contentId);
           } else {
-            router.push('media/'+spacesReplaced+'/'+contentId);
+            router.push('movie/'+spacesReplaced+'/'+contentId);
           }
         // router.push('series/baby-come-naa/242');
     }
@@ -53,7 +57,7 @@ export default function Slider({ data }) {
                 <span className={`fas fa-chevron-right ${styles.NEXTBTN}`}></span>
             </button>
         <div className={styles.TABSBOX} data-tab-box>
-            {data.length >0 && data.map((item, index)=> (
+            {data.length >0 ? data.map((item, index)=> (
             <div className={styles.TAB} onClick={()=>goToDetailsPage(item)} key={index}>
                 <Image 
                     unoptimized 
@@ -64,7 +68,11 @@ export default function Slider({ data }) {
                     loading="lazy"
                     />
             </div>
-            ))
+            )) : emptyData.map((item, index)=> (
+                <div className={styles.TAB} onClick={()=>goToDetailsPage(item)} key={index}>
+                    <div className={styles.IMG}></div>
+                </div>
+                ))
             }
         </div>
         </div>

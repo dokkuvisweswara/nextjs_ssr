@@ -46,7 +46,7 @@ export default function Header() {
                 <ul className={styles.PrimaryMenue}>
                     {
                        staticMenue && staticMenue.map((item, index) =>(
-                        item.dataType == "CONTENT" && <li key={index} onClick={() => toggMenue()}> <Link href={item.title.default} className={router.asPath =='/'+item.title.default.toLowerCase() ? styles.active : ""}> {item.title.default} </Link> </li>                            
+                        item.dataType == "CONTENT" && <li key={index} onClick={() => toggMenue()}> <Link href={item.title.default} className={router.asPath.toLowerCase() == '/'+item.title.default.toLowerCase() ? styles.active : ""}> {item.title.default} </Link> </li>                            
                         ))
                     }
                 </ul>

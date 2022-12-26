@@ -15,12 +15,13 @@ export default function Section ({ data })  {
       //   // router.query.lang is defined
         
       // }
-    }, [])
+    }, []);
+    
     return (
         <>
         <Head>
-          <title>{data[3].tabTitle}</title>
-          <meta name="description" content={data[3].tabDescription} />
+          <title>Hello</title>
+          <meta name="description" content="Hello......" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
         {
@@ -32,13 +33,13 @@ export default function Section ({ data })  {
 export function content(data) {
   return(
     <>
-      <Carousel data={data[1]} />
-      {data[0].length > 2 ? <Slider data={data[2]} /> : <Gridview data={data[2]}/>}
+      <Carousel data={data[0]} />
+      <Slider data={data[1]} />
+      {/* {data[0].length > 2 ? <Slider data={data[2]} /> : <Gridview data={data[2]}/>} */}
     </>
   )
 }
 export function Loading() {
-  alert("hello___Loading");
   return(
     <>
     <div className={styles.loading}>
@@ -51,65 +52,80 @@ export function Loading() {
 //ServerSide Props....
 export async function getServerSideProps(context) {
     // Fetch data from external API 
-    const section = context && context.query && context.query.section.toLowerCase();
-    let sectionId = '';
+    let data = [];
+    const section = context && context.query && context.query.section.toUpperCase();
     let consfigInfo = [];
+    let filteredSections = [];
     context.res.setHeader(
       'Cache-Control',
       'public, s-maxage=100, stale-while-revalidate=59'
     );
-    const configUrl = 'https://realtimedatabasesumit.firebaseio.com/alt.json';
+    const configUrl = 'https://d2xowqqrpfxxjf.cloudfront.net/noorplay/web-noorplayv2.json';
     const configRes = await fetch(configUrl);
     const configContent = await configRes.json();
-    configContent.map((x, i)=>{if(x.title == context.query.section){
-      sectionId = x.sectionID;
-      consfigInfo = x;
-    }})
-    const sectionUrl = `https://api.cloud.altbalaji.com/sections/`+sectionId+`?domain=IN&limit=10`;
-    const sectionRes = await fetch(sectionUrl);    
-    const sectionContent = await sectionRes.json();
-    const sectionData = sectionContent.lists ? sectionContent.lists : [];    
-    // console.log("dataset----", sectionId);
-    let first = sectionData.slice(0, 2);
-    // console.log("dataset  server----", first);
-    const URl = `https://catalogue-ms.cloud.altbalaji.com/v1/list`+first[0]['external_id']+`?domain=IN&size=10&page=1`;
-    let thumbNailUrl = `https://catalogue-ms.cloud.altbalaji.com/v1/list`+first[1]['external_id']+`?domain=IN&size=10&page=1`;
-    // if(section == 'home'){
-    //   thumbNailUrl = 'https://catalogue-ms.cloud.altbalaji.com/v1/list/zuul/catalogue/balaji/catalogue/filters/trending-home-1?domain=IN&limit=10';
-    // }else {
-    //   thumbNailUrl = `https://catalogue-ms.cloud.altbalaji.com/v1/list/zuul/catalogue/balaji/catalogue/filters/all-`+section+`?domain=IN&limit=10`
-    // }
-    
-    const caroselRes = await fetch(URl);
-    const thumbNailRes = await fetch(thumbNailUrl);
+    configContent.screens && configContent.screens.map((x, i)=>{
+      if(x.id.toUpperCase() == section){
+      filteredSections = x.sections.slice(0, 3);
+    }});
+    const carouselUrl = `https://vcms.mobiotics.com/prodv3/`+filteredSections[0]['endpoint']+`?`+getParams(filteredSections[0].parameters);
+    const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+filteredSections[1]['endpoint']+`?`+getParams(filteredSections[1].parameters);
+    const caroselRes = await fetch(carouselUrl, {"headers": {
+      "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VpZCI6IjI3Mzk0MDIyNjk4OTkxNyIsImRldmljZXR5cGUiOiJQQyIsImRldmljZW9zIjoiTUFDT1MiLCJwcm92aWRlcmlkIjoibm9vcnBsYXkiLCJ0aW1lc3RhbXAiOjE2NzIwMjgzMTAsImFwcHZlcnNpb24iOiI0Ni40LjAiLCJpcCI6IjE1LjE1OC40Mi4xNiIsIkdlb0xvY0lwIjoiNDkuMjA3LjIyNC4yMDciLCJ2aXNpdGluZ2NvdW50cnkiOiJJTiIsImlzc3VlciI6Im5vb3JwbGF5IiwiZXhwaXJlc0luIjo2MDQ4MDAsInByb3ZpZGVybmFtZSI6Ik5vb3JQbGF5IiwiaWF0IjoxNjcyMDI4MzE2LCJleHAiOjE2NzI2MzMxMTYsImlzcyI6Im5vb3JwbGF5In0.6RCNKdXU4n4LzA47PtZc0Da3GvOlIWnG2XIWgW2zbeQ",
+    }, "method": "GET"},);
     const caroselContent = await caroselRes.json();
+    const caroselData = await actACrouselDataOne(caroselContent.data ? caroselContent.data : []);
+    const thumbNailRes = await fetch(thumbNailUrl, {"headers": {
+      "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VpZCI6IjI3Mzk0MDIyNjk4OTkxNyIsImRldmljZXR5cGUiOiJQQyIsImRldmljZW9zIjoiTUFDT1MiLCJwcm92aWRlcmlkIjoibm9vcnBsYXkiLCJ0aW1lc3RhbXAiOjE2NzIwMjgzMTAsImFwcHZlcnNpb24iOiI0Ni40LjAiLCJpcCI6IjE1LjE1OC40Mi4xNiIsIkdlb0xvY0lwIjoiNDkuMjA3LjIyNC4yMDciLCJ2aXNpdGluZ2NvdW50cnkiOiJJTiIsImlzc3VlciI6Im5vb3JwbGF5IiwiZXhwaXJlc0luIjo2MDQ4MDAsInByb3ZpZGVybmFtZSI6Ik5vb3JQbGF5IiwiaWF0IjoxNjcyMDI4MzE2LCJleHAiOjE2NzI2MzMxMTYsImlzcyI6Im5vb3JwbGF5In0.6RCNKdXU4n4LzA47PtZc0Da3GvOlIWnG2XIWgW2zbeQ",
+    }, "method": "GET"},);
     const thumbnailContent = await thumbNailRes.json();
-    let data = [];
-    let caroselData = await actACrouselData(caroselContent.content ? caroselContent.content : []);
-    // console.log("dataset  server----", caroselData);
-    let thumbNailData = await actAthumbnailData(thumbnailContent.content ? thumbnailContent.content : []);
-    data = data.concat([sectionData], [caroselData], [thumbNailData], [consfigInfo]);
-    // Pass data to the page via props
+    console.log("caroselContent.data", caroselContent.data)
+    let thumbNailData = await actACrouselDataOne(thumbnailContent.data ? thumbnailContent.data : []);
+    data = data.concat([caroselData], [thumbNailData], [consfigInfo]);
     
-    // console.log("dataset  server----", data[3]);
+    // Pass data to the page via props
     return { props: { data } }
   };
-
-  export async function actACrouselData(data) {
+  export function getParams(params) {
+    var urlParam = [];
+    for (var i in params){
+      urlParam.push(encodeURI(i) + "=" + encodeURI(params[i]));
+    }
+    urlParam =  urlParam.join("&").toString();
+    urlParam =  urlParam.replaceAll('%22', "");
+    return urlParam;
+  }
+  export async function actACrouselDataOne(data){
     let filteredArray = [];
     if(data.length >=0){
       return filteredArray = data.map((item, index)=> {
         let filteredData = {};
-        filteredData.uid = item.uid;
-        filteredData.id = item.id;
+        filteredData.uid = item.category;
+        filteredData.id = item.objectid;
         filteredData.title = item.title;
-        filteredData.image = getHotspotImage(item.images);
+        filteredData.image = getHotspotImageOne(item.poster);
         return filteredData;
       });       
     }else{ 
       return [];
     }
   }
+  export const getHotspotImageOne = (sectionListDetailSingle) => {
+    let single = [];
+    let singleUrl = '';
+    sectionListDetailSingle.filter((img) => {
+      if (img.postertype === "LANDSCAPE") {
+        single = img.filelist;
+      }
+    });
+    if (single.length > 0) {  
+        single.filter((img) => {
+          if (img.quality === "HD") {
+            singleUrl =  img.filename;
+          }
+        });
+  } else singleUrl = '';
+  return singleUrl;
+}
   export async function actAthumbnailData(data) {
     let filteredArray = [];
     if(data.length >=0){
@@ -123,31 +139,6 @@ export async function getServerSideProps(context) {
       });       
     }else{ 
       return [];
-    }
-  }
-  export const getHotspotImage = (sectionListDetailSingle) => {
-    let single = []
-    single = sectionListDetailSingle.filter((img) => {
-      if (img.type === 'system') {
-        return img;
-      }
-      return ''
-    });
-
-    if (single.length > 0) {
-      if (single[0].format && typeof (single[0].format) != 'string') {
-        // return single[0].format['tiles-hd'].source
-        return single[0].format['tiles-sd'].source
-      } else {
-        single = sectionListDetailSingle.filter((img) => {
-          //previously we taking img.type === "system" && img.formet == 'tiles-hd'
-          if (img.type === 'system' && img.format == 'tiles-sd') {
-            return img;
-          }
-          return ''
-        });
-        return single[0].url;
-      }
     }
   }
   

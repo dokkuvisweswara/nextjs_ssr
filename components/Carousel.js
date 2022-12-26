@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import Head from "next/head";
 
 export default function Carousel({ data }) {
+    console.log("data--", data);
     const router = useRouter();
     const { id } = router.query;
     let [currentSlide, setCurrentSlide] = useState(0);
@@ -70,14 +71,14 @@ export default function Carousel({ data }) {
         changeSlide(item);
     }
     const goToDetailsPage = (data) => {
-        let [contentType, contentId] = data.uid.split('-');
+        let contentType = data.uid;
+        let contentId = data.id;
         const str = data.title;
         const spacesReplaced = str.replaceAll(' ', '-');
-        if (contentType == 'series') {
-            
-            router.push('show/'+spacesReplaced+'/'+contentId);
+        if (contentType == "TVSHOW") {            
+            router.push('series/'+spacesReplaced+'/'+contentId);
           } else {
-            router.push('media/'+spacesReplaced+'/'+contentId);
+            router.push('movie/'+spacesReplaced+'/'+contentId);
           }
         // router.push('series/baby-come-naa/242');
     }
