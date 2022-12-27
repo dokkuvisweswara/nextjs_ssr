@@ -7,8 +7,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // const initialState: ProfileState = {
 //     name: '',
 // }
-const isSSR = () => typeof localStorage === 'undefined'; 
-console.log('isSSR', isSSR());
+const isSSR = () => typeof localStorage === 'undefined';
 const somevalue = () => {
    let x=  localStorage.getItem('userName') !== undefined ? localStorage.getItem('userName') : 'null';
    return x;
@@ -21,7 +20,7 @@ export const profileSlice = createSlice({
   reducers: {
     SET_PROFILE_NAME: (state, action) => {
         state.name = action.payload;
-        console.log('acton', state.name);
+        return state
       },
 //     getProfileName: (state, action: PayloadAction<any>) => {
 //       console.log('acton', action);      

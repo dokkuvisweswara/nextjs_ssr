@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import Router from 'next/router';
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
-import { SET_PROFILE_NAME } from "../../redux/store/profileSlice";
+import { SET_PROFILE_NAME } from "../../redux/slices/profileSlice";
 import { useEffect, useState } from "react";
 import Head from "next/head";
 import styles from '../../styles/Login.module.css';

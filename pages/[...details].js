@@ -2,7 +2,6 @@ import styles from '../styles/Details.module.css';
 import Image from 'next/image';
 
 export default function Details({data}) {
-  console.log("Details", data);
     const filterImage = (sectionListDetailSingle) => {
       let single = [];
       let singleUrl = '';
@@ -49,16 +48,13 @@ export async function getServerSideProps(context) {
        'Cache-Control',
        'public, s-maxage=100, stale-while-revalidate=59'
      );
-     console.log("++++", section[1]);
      const URl = `https://vcms.mobiotics.com/prodv3/subscriber/v1/content/`+section[2]+`?displaylanguage=eng`;
      const response = await fetch(URl, {"headers":{
       'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VpZCI6IjE5NDQ2NTg3NTk1NTMxNzMiLCJkZXZpY2V0eXBlIjoiUEMiLCJkZXZpY2VvcyI6IldJTkRPV1MiLCJwcm92aWRlcmlkIjoibm9vcnBsYXkiLCJ0aW1lc3RhbXAiOjE2NzE3MDIxMDUsImFwcHZlcnNpb24iOiI0Ni40LjAiLCJpcCI6IjE1LjE1OC40Mi4zOCIsIkdlb0xvY0lwIjoiMTcxLjc2Ljg3LjgzIiwidmlzaXRpbmdjb3VudHJ5IjoiSU4iLCJpc3N1ZXIiOiJub29ycGxheSIsImV4cGlyZXNJbiI6NjA0ODAwLCJwcm92aWRlcm5hbWUiOiJOb29yUGxheSIsImlhdCI6MTY3MTcwMjEwMCwiZXhwIjoxNjcyMzA2OTAwLCJpc3MiOiJub29ycGxheSJ9.Uo6rm4-2X27jS_SR_b9xisCc9ra0oOY4ECiOK4dYq0k'
      }});
-     console.error("res", response)
      const content = await response.json();
      let data = [];
      data = content ? content : [];
      // Pass data to the page via props
-     console.log("-----", data);
      return { props: { data } }
 }

@@ -1,14 +1,28 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { configureStore, combineReducers, AnyAction } from '@reduxjs/toolkit';
 import { HYDRATE, createWrapper  } from "next-redux-wrapper";
-import profile from './store/profileSlice';
-
+import profile from './slices/profileSlice';
+import config from './slices/configSlice';
 const combinedReducer = combineReducers({
-  profile
+  profile,
+  config
 });
-export const makeStore = () => configureStore({
-  reducer: combinedReducer,
-})
 
+const reducer:any = (state: ReturnType<typeof combinedReducer>, action: AnyAction) => {
+  if (action.type === HYDRATE) {
+    const nextState = {
+      ...state, // use previous state
+      ...action.payload, // apply delta from hydration
+    };
+    return nextState;
+  } else {
+    return combinedReducer(state, action);
+  }
+};
+
+export const makeStore = () =>
+  configureStore({
+    reducer,
+  });
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export const wrapper = createWrapper(makeStore, { debug: true } );
 export type RootStore = ReturnType<typeof makeStore>;
