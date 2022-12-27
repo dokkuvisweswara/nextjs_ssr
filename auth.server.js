@@ -29,3 +29,10 @@ export const getSession = () => {
     let session = localStorage.getItem('userLogged') == undefined || 'false' ? false : true;
     return session;
 }
+
+export const getConfigData = async () => {
+    const configUrl = 'https://d2xowqqrpfxxjf.cloudfront.net/noorplay/web-noorplayv2.json';
+    const configRes =  await fetch(configUrl);
+    const configContent =  configRes.json();
+    return configContent;
+}

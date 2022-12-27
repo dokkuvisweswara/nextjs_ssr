@@ -5,7 +5,6 @@ import styles from '../styles/Slider.module.css';
 import Image from 'next/image';
 
 export default function Slider({ data }) {
-    console.log("data===", data);
     const router = useRouter();
     const emptyData = [1, 2, 3, 4]
     const [tabsBoxOne, setTabsBoxOne] = useState(false);

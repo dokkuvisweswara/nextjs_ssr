@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import Head from "next/head";
 
 export default function Carousel({ data }) {
-    console.log("data--", data);
     const router = useRouter();
     const { id } = router.query;
     let [currentSlide, setCurrentSlide] = useState(0);
@@ -24,7 +23,6 @@ export default function Carousel({ data }) {
     }, [data, id, router.isReady]);
 
     function modulo(number, mod) {
-        console.log("modulo", number, mod)
         let result = number % mod;
         if (result < 0) {
             result += mod;
