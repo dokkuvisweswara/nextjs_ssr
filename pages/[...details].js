@@ -1,5 +1,6 @@
 import styles from '../styles/Details.module.css';
 import Image from 'next/image';
+import Head from 'next/head';
 
 export default function Details({data}) {
     const filterImage = (sectionListDetailSingle) => {
@@ -20,6 +21,12 @@ export default function Details({data}) {
     return singleUrl;
   }
     return(
+      <>
+        <Head>
+          <title>{data.defaulttitle}</title>
+          <meta name="description" content={data.shortdescription} />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
         <div className={styles.detailsContainer}>
             <div className={styles.detailMainSection}>
                 <div className={styles.deatilsText}>
@@ -38,6 +45,7 @@ export default function Details({data}) {
                 </div>
             </div>
         </div>
+      </>
     )
 }
 

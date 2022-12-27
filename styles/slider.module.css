@@ -41,8 +41,8 @@
 .TAB img{
     width: 300px;
     height: 100%;
-    border: 1px solid white;
-    border-radius: 10px;
+    /* border: 1px solid white;
+    border-radius: 10px; */
 }
 .TAB .IMG{
   width: 300px;

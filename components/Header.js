@@ -30,14 +30,16 @@ export default function Header() {
         <header className={styles.headerArea}>
         <div className={styles.headerContainer}>
             <div className={styles.siteLogo}>
-                <Image 
-                    unoptimized
-                    src="https://www.mobiotics.com/static/media/MobioticsLogo.aef4f60398cf176c355e86288c27b9ce.svg"
-                    alt='mobiotics logo'
-                    width={100}
-                    height={100}
-                    loading="lazy"
-                    />
+                <Link href='/Home'>
+                    <Image 
+                        unoptimized
+                        src="https://www.mobiotics.com/static/media/MobioticsLogo.aef4f60398cf176c355e86288c27b9ce.svg"
+                        alt='mobiotics logo'
+                        width={100}
+                        height={100}
+                        loading="lazy"
+                        />
+                </Link>
             </div>
             <div className={styles.mobileNav} onClick={() => toggMenue()}>
                 <i className="fas fa-bars"></i>

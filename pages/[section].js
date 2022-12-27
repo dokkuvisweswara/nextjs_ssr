@@ -22,8 +22,8 @@ export default function Section ({ data })  {
     return (
         <>
         <Head>
-          <title>Hello</title>
-          <meta name="description" content="Hello......" />
+          <title>{section}</title>
+          <meta name="description" content={section} />
           <link rel="icon" href="/favicon.ico" />
         </Head>
         {
@@ -95,7 +95,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) =>
         "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VpZCI6IjI3Mzk0MDIyNjk4OTkxNyIsImRldmljZXR5cGUiOiJQQyIsImRldmljZW9zIjoiTUFDT1MiLCJwcm92aWRlcmlkIjoibm9vcnBsYXkiLCJ0aW1lc3RhbXAiOjE2NzIwMjgzMTAsImFwcHZlcnNpb24iOiI0Ni40LjAiLCJpcCI6IjE1LjE1OC40Mi4xNiIsIkdlb0xvY0lwIjoiNDkuMjA3LjIyNC4yMDciLCJ2aXNpdGluZ2NvdW50cnkiOiJJTiIsImlzc3VlciI6Im5vb3JwbGF5IiwiZXhwaXJlc0luIjo2MDQ4MDAsInByb3ZpZGVybmFtZSI6Ik5vb3JQbGF5IiwiaWF0IjoxNjcyMDI4MzE2LCJleHAiOjE2NzI2MzMxMTYsImlzcyI6Im5vb3JwbGF5In0.6RCNKdXU4n4LzA47PtZc0Da3GvOlIWnG2XIWgW2zbeQ",
       }, "method": "GET"},);
       const thumbnailContent = await thumbNailRes.json();
-      let thumbNailData = await actACrouselDataOne(thumbnailContent.data ? thumbnailContent.data : []);
+      let thumbNailData = await actThumbnailDataOne(thumbnailContent.data ? thumbnailContent.data : []);
       data = data.concat([caroselData], [thumbNailData], [consfigInfo]);
       
       // Pass data to the page via props
@@ -125,10 +125,26 @@ export const getServerSideProps = wrapper.getServerSideProps((store) =>
       return [];
     }
   }
+  export async function actThumbnailDataOne(data){
+    let filteredArray = [];
+    if(data.length >=0){
+      return filteredArray = data.map((item, index)=> {
+        let filteredData = {};
+        filteredData.uid = item.category;
+        filteredData.id = item.objectid;
+        filteredData.title = item.title;
+        filteredData.image = getHotspotImageOne(item.poster);
+        return filteredData;
+      });       
+    }else{ 
+      return [];
+    }
+  }
   export const getHotspotImageOne = (sectionListDetailSingle) => {
     let single = [];
     let singleUrl = '';
     sectionListDetailSingle.filter((img) => {
+
       if (img.postertype === "LANDSCAPE") {
         single = img.filelist;
       }
@@ -142,19 +158,22 @@ export const getServerSideProps = wrapper.getServerSideProps((store) =>
   } else singleUrl = '';
   return singleUrl;
 }
-  export async function actAthumbnailData(data) {
-    let filteredArray = [];
-    if(data.length >=0){
-      return filteredArray = data.map((item, index)=> {
-        let filteredData = {};
-        filteredData.uid = item.uid;
-        filteredData.id = item.id;
-        filteredData.title = item.title;
-        filteredData.image = item.images[0].url;
-        return filteredData;
-      });       
-    }else{ 
-      return [];
-    }
+  export const actAthumbnailImage = (sectionListDetailSingle) => {
+    let single = [];
+    let singleUrl = '';
+    console.log("cvv", sectionListDetailSingle);
+    sectionListDetailSingle.filter((img) => {
+      if (img.postertype === "PORTRAIT") {
+        single = img.filelist;
+      }
+    });
+    if (single.length > 0) {  
+        single.filter((img) => {
+          if (img.quality === "HD") {
+            singleUrl =  img.filename;
+          }
+        });
+  } else singleUrl = '';
+  return singleUrl;
   }
   
