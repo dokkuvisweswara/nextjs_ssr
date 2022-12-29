@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import styles from '../styles/Slider.module.css';
 import Image from 'next/image';
 
-export default function Slider({ data }) {
+export default function Slider({ data, slideIndex }) {
     const router = useRouter();
     const emptyData = [1, 2, 3, 4]
     const [tabsBoxOne, setTabsBoxOne] = useState(false);
@@ -21,8 +21,12 @@ export default function Slider({ data }) {
         tabsBox[0].addEventListener("mousemove", dragging);
         // document.addEventListener("mouseup", () => {isDragging = false;});
     }, [router.isReady]);
-    const handlePrevNext = (isPrevious) => {
-            tabsBoxOne.scrollLeft += isPrevious ? -350 : 350;
+    const handlePrevNext = (isPrevious, keyValue) => {
+        console.log("isPrevious", keyValue);
+        const tabsBox = document.querySelectorAll('[data-tab-box]');
+        tabsBox.forEach((carou, index) => {
+            if(index == keyValue){tabsBox[keyValue].scrollLeft += isPrevious ? -350 : 350;};
+        });
     }
     const goToDetailsPage = (data) => {
         let contentType = data.uid;
@@ -44,14 +48,14 @@ export default function Slider({ data }) {
             <button
                 className={`${styles.carouselButton} ${styles.carouselButtonPrevious}`}
                 data-carousel-button-previous
-                onClick={() => handlePrevNext(true)}
+                onClick={() => handlePrevNext(true, slideIndex)}
             >
                 <span className={`fas fa-chevron-left ${styles.PREVBTN}`}></span>
             </button>
             <button
                 className={`${styles.carouselButton} ${styles.carouselButtonNext}`}
                 data-carousel-button-next
-                onClick={() => handlePrevNext(false)}
+                onClick={() => handlePrevNext(false, slideIndex)}
             >
                 <span className={`fas fa-chevron-right ${styles.NEXTBTN}`}></span>
             </button>
@@ -64,7 +68,9 @@ export default function Slider({ data }) {
                     alt={item.title}
                     width={200}
                     height={300}
-                    loading="lazy"
+                    loading="lazy"                    
+                    blurDataURL="data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                    placeholder="blur"
                     />
             </div>
             )) : emptyData.map((item, index)=> (

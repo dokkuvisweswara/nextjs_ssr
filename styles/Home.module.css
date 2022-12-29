@@ -43,7 +43,7 @@
   display: flex;
   transition: transform 0.5s;
   transform: translateX(calc(-100% * var(--current-slide)));
-  height: 85vh;
+  height: 60vh;
   position: relative;
 }
 .SLIDER .SLIDE{

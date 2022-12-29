@@ -50,7 +50,6 @@ export default function Login() {
     <div className={styles.detailsContainer}>
       <Head>
         <title>Login Page</title>
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
         {
