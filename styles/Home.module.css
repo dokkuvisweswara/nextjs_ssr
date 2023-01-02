@@ -4,6 +4,9 @@
   align-items: center !important;
   min-height: calc(100vh - 73px);
 }
+.alignCenter {
+  text-align: center;
+}
 .container {
   /* padding: 0 2rem; */
   display: flex;
@@ -43,7 +46,7 @@
   display: flex;
   transition: transform 0.5s;
   transform: translateX(calc(-100% * var(--current-slide)));
-  height: 60vh;
+  height: 85vh;
   position: relative;
 }
 .SLIDER .SLIDE{

@@ -14,33 +14,57 @@ import useOnScreen from "../useOnScreen";
 
 export default function Section ({ data })  {
     let [carouselData, setCarouselData] = React.useState(data[0]);
-    let [thumbNailData, setThumbNailData] = React.useState(data[0]);
+    let [thumbNailData, setThumbNailData] = React.useState(data[1]);
+    let [isThumbNailLoading, setIsThumbNailLoading] = React.useState(false);
     let user = useSelector((state) => state.config);
     const isSSR = () =>{return typeof window  == undefined};
-    console.log("9999999+", isSSR());
     const router = useRouter();
     const section = router.query.section;
     React.useEffect(() => {
         setCarouselData(data[0]);
         setThumbNailData(data[1]);
-      window.addEventListener("scroll", () => {
+      window.addEventListener("scroll", () => {        
+        setIsThumbNailLoading(true);
         handleScroll();
-        console.log("ppppp")
       }, { once: true });
     }, [router.events, data]);
-    const handleScroll = async () => {
-      let item = user.filteredData;
-      console.log("0000", item.length)
-      if(item.length >3){
-      const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+item[3].endpoint+`?`+getParams(item[4].parameters);
-      console.log("__--__", thumbNailUrl);      
-      const thumbNailRes = await fetch(thumbNailUrl, {"headers": {
-        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VpZCI6IjI3Mzk0MDIyNjk4OTkxNyIsImRldmljZXR5cGUiOiJQQyIsImRldmljZW9zIjoiTUFDT1MiLCJwcm92aWRlcmlkIjoibm9vcnBsYXkiLCJ0aW1lc3RhbXAiOjE2NzIwMjgzMTAsImFwcHZlcnNpb24iOiI0Ni40LjAiLCJpcCI6IjE1LjE1OC40Mi4xNiIsIkdlb0xvY0lwIjoiNDkuMjA3LjIyNC4yMDciLCJ2aXNpdGluZ2NvdW50cnkiOiJJTiIsImlzc3VlciI6Im5vb3JwbGF5IiwiZXhwaXJlc0luIjo2MDQ4MDAsInByb3ZpZGVybmFtZSI6Ik5vb3JQbGF5IiwiaWF0IjoxNjcyMDI4MzE2LCJleHAiOjE2NzI2MzMxMTYsImlzcyI6Im5vb3JwbGF5In0.6RCNKdXU4n4LzA47PtZc0Da3GvOlIWnG2XIWgW2zbeQ",
-      }, "method": "GET"},);
-      const thumbnailContent = await thumbNailRes.json();
-      let newThumbNailData = await actThumbnailDataOne(thumbnailContent.data ? thumbnailContent.data : []);
-      setThumbNailData([...data[1], newThumbNailData]);
-    }
+    const handleScroll = async () => {      
+      let configContent = user.configData;
+      let filteredSections = [];
+      let thumbnailSections = [];
+      let thumbnailSectionsData = [];
+      console.log("77777", configContent);
+      configContent && configContent.map((x, i)=>{
+      if(x.id.toUpperCase() == section.toUpperCase()){
+      filteredSections = x.sections;
+    }});    
+    getFilteredSection(filteredSections);
+    let newFilteredSections = getFilteredSection(filteredSections) ? getFilteredSection(filteredSections) : [];
+    thumbnailSections = newFilteredSections.slice(2, 5);
+      console.log("++++", thumbnailSections);
+      // const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+item[3].endpoint+`?`+getParams(item[4].parameters);let itemLength = thumbnailSections.length;
+      let itemLength = thumbnailSections.length;
+      for(let i =0; i< itemLength; i++){
+        let item = thumbnailSections[i];
+        const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+item.endpoint+`?`+getParams(item.parameters);
+        await getThumbNailData(thumbNailUrl).then((response) => {
+          setIsThumbNailLoading(true);
+          thumbnailSectionsData = [...thumbnailSectionsData, response.success.data];
+      }).catch((error) => {
+          if (error.status == 429) {
+            console.log("responsesuccess", error.message);
+          }else {
+            console.log("responsesuccess", 'Generic error');
+          }         
+      });
+      };
+      let NewthumbnailSectionsData = thumbnailSectionsData.map((item, i) => {
+        let thumbNailData = actThumbnailDataOne(item ? item : []);
+        return thumbNailData;
+      });
+      setIsThumbNailLoading(false);
+      setThumbNailData([...data[1], ...NewthumbnailSectionsData]);
+      console.log("ThumbNailData", thumbNailData);
     };
       return (
           <>
@@ -56,6 +80,7 @@ export default function Section ({ data })  {
                 <Slider data={section} slideIndex={index} key={index}/>
               ))
              }
+             {isThumbNailLoading && <div className={styles.alignCenter}><h1>Loading........</h1></div>}
             </> : <></>
           }        
           </>
@@ -83,56 +108,45 @@ export const getServerSideProps = wrapper.getServerSideProps((store) =>
       configContent.screens && configContent.screens.map((x, i)=>{
         if(x.id.toUpperCase() == section){
         filteredSections = x.sections;
-      }});      
-      let newFilteredSections = [];
-      filteredSections.map((item, i)=>{
-        if(item.sectionType === "CONTINUEWATCH"){
-          console.log("CONTINUEWATCH", item.sectionType === "CONTINUEWATCH")
-        }else{
-          newFilteredSections.push(item);
-        }
-      });
-      store.dispatch(SET_FILTEREDSECTIONS(newFilteredSections));
-      thumbnailSections = newFilteredSections.slice(1, 4);
-      const carouselUrl = `https://vcms.mobiotics.com/prodv3/`+newFilteredSections[0]['endpoint']+`?`+getParams(newFilteredSections[0].parameters);
-      // const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+newFilteredSections[1]['endpoint']+`?`+getParams(newFilteredSections[1].parameters);
+      }});    
+      getFilteredSection(filteredSections);  
+      let newFilteredSections = getFilteredSection(filteredSections) ? getFilteredSection(filteredSections) : [];
+      thumbnailSections = newFilteredSections.slice(1, 2);
+      const carouselUrl = `https://vcms.mobiotics.com/prodv3/`+newFilteredSections[0].endpoint+`?`+getParams(newFilteredSections[0].parameters);
       const caroselRes = await fetch(carouselUrl, {"headers": {
-        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VpZCI6IjI3Mzk0MDIyNjk4OTkxNyIsImRldmljZXR5cGUiOiJQQyIsImRldmljZW9zIjoiTUFDT1MiLCJwcm92aWRlcmlkIjoibm9vcnBsYXkiLCJ0aW1lc3RhbXAiOjE2NzIwMjgzMTAsImFwcHZlcnNpb24iOiI0Ni40LjAiLCJpcCI6IjE1LjE1OC40Mi4xNiIsIkdlb0xvY0lwIjoiNDkuMjA3LjIyNC4yMDciLCJ2aXNpdGluZ2NvdW50cnkiOiJJTiIsImlzc3VlciI6Im5vb3JwbGF5IiwiZXhwaXJlc0luIjo2MDQ4MDAsInByb3ZpZGVybmFtZSI6Ik5vb3JQbGF5IiwiaWF0IjoxNjcyMDI4MzE2LCJleHAiOjE2NzI2MzMxMTYsImlzcyI6Im5vb3JwbGF5In0.6RCNKdXU4n4LzA47PtZc0Da3GvOlIWnG2XIWgW2zbeQ",
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VpZCI6IjEyMjM3NjQ2ODgwOTg4MDMiLCJkZXZpY2V0eXBlIjoiUEMiLCJkZXZpY2VvcyI6IldJTkRPV1MiLCJwcm92aWRlcmlkIjoibm9vcnBsYXkiLCJ0aW1lc3RhbXAiOjE2NzI2NDQ0NDYsImFwcHZlcnNpb24iOiI0Ni40LjAiLCJpcCI6IjE1LjE1OC40Mi40IiwiR2VvTG9jSXAiOiIxNzEuNzYuNzEuNzIiLCJ2aXNpdGluZ2NvdW50cnkiOiJJTiIsImlzc3VlciI6Im5vb3JwbGF5IiwiZXhwaXJlc0luIjo2MDQ4MDAsInByb3ZpZGVybmFtZSI6Ik5vb3JQbGF5IiwiaWF0IjoxNjcyNjQ0NDM0LCJleHAiOjE2NzMyNDkyMzQsImlzcyI6Im5vb3JwbGF5In0.cgt9LtwAVmeJI5tTiNBPSLV1G1VQ7t-iq_oc4fyAw0o",
       }, "method": "GET"},);
       const caroselContent = await caroselRes.json();
       const caroselData = actACrouselDataOne(caroselContent.data ? caroselContent.data : []);
-      // const thumbNailRes = await fetch(thumbNailUrl, {"headers": {
-      //   "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VpZCI6IjI3Mzk0MDIyNjk4OTkxNyIsImRldmljZXR5cGUiOiJQQyIsImRldmljZW9zIjoiTUFDT1MiLCJwcm92aWRlcmlkIjoibm9vcnBsYXkiLCJ0aW1lc3RhbXAiOjE2NzIwMjgzMTAsImFwcHZlcnNpb24iOiI0Ni40LjAiLCJpcCI6IjE1LjE1OC40Mi4xNiIsIkdlb0xvY0lwIjoiNDkuMjA3LjIyNC4yMDciLCJ2aXNpdGluZ2NvdW50cnkiOiJJTiIsImlzc3VlciI6Im5vb3JwbGF5IiwiZXhwaXJlc0luIjo2MDQ4MDAsInByb3ZpZGVybmFtZSI6Ik5vb3JQbGF5IiwiaWF0IjoxNjcyMDI4MzE2LCJleHAiOjE2NzI2MzMxMTYsImlzcyI6Im5vb3JwbGF5In0.6RCNKdXU4n4LzA47PtZc0Da3GvOlIWnG2XIWgW2zbeQ",
-      // }, "method": "GET"},);
-      let itemLength = thumbnailSections.length;
-
-      for(let i =0; i< itemLength; i++){
-        let item = thumbnailSections[i];
-        console.log(`for loop get thumb ${i}`);
-        const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+item.endpoint+`?`+getParams(item.parameters);
-        let actData = {};
-        await getThumbNailData(thumbNailUrl).then((response) => {
-         thumbnailSectionsData = [...thumbnailSectionsData, response.success.data];
-      }).catch((error) => {
-          if (error.status == 429) {
-            console.log("responsesuccess", error.message);
-          }else {
-            console.log("responsesuccess", 'Generic error');
-          }
-         
-      });
-      console.log(`for loop ${i}`);
-      };    
-      // const thumbnailContent = await thumbNailRes.json();
-      let NewthumbnailSectionsData = thumbnailSectionsData.map((item, i) => {
-        let thumbNailData = actThumbnailDataOne(item ? item : []);
-        return thumbNailData;
-      });
-      console.log("NewthumbnailSectionsData", NewthumbnailSectionsData);
-      // let thumbNailData = await actThumbnailDataOne(thumbnailContent.data ? thumbnailContent.data : []);
-      let thumbNailData = [];
-      data = data.concat([caroselData], [NewthumbnailSectionsData], [consfigInfo]);
-      store.dispatch(SET_CONFIG_DATA(data));
+      const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+thumbnailSections[0].endpoint+`?`+getParams(thumbnailSections[0].parameters);
+      const thumbNailRes = await fetch(thumbNailUrl, {"headers": {
+        "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VpZCI6IjEyMjM3NjQ2ODgwOTg4MDMiLCJkZXZpY2V0eXBlIjoiUEMiLCJkZXZpY2VvcyI6IldJTkRPV1MiLCJwcm92aWRlcmlkIjoibm9vcnBsYXkiLCJ0aW1lc3RhbXAiOjE2NzI2NDQ0NDYsImFwcHZlcnNpb24iOiI0Ni40LjAiLCJpcCI6IjE1LjE1OC40Mi40IiwiR2VvTG9jSXAiOiIxNzEuNzYuNzEuNzIiLCJ2aXNpdGluZ2NvdW50cnkiOiJJTiIsImlzc3VlciI6Im5vb3JwbGF5IiwiZXhwaXJlc0luIjo2MDQ4MDAsInByb3ZpZGVybmFtZSI6Ik5vb3JQbGF5IiwiaWF0IjoxNjcyNjQ0NDM0LCJleHAiOjE2NzMyNDkyMzQsImlzcyI6Im5vb3JwbGF5In0.cgt9LtwAVmeJI5tTiNBPSLV1G1VQ7t-iq_oc4fyAw0o",
+      }, "method": "GET"},);
+      const thumbnailContent = await thumbNailRes.json();
+      let newThumbNailData = await actThumbnailDataOne(thumbnailContent.data ? thumbnailContent.data : []);
+      let thumbnailSData = [];
+      thumbnailSData = thumbnailSData.concat([newThumbNailData]);
+      // let itemLength = thumbnailSections.length;
+      // for(let i =0; i< itemLength; i++){
+      //   let item = thumbnailSections[i];
+      //   const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+item.endpoint+`?`+getParams(item.parameters);
+      //   await getThumbNailData(thumbNailUrl).then((response) => {
+      //    thumbnailSectionsData = [...thumbnailSectionsData, response.success.data];
+      // }).catch((error) => {
+      //     if (error.status == 429) {
+      //       console.log("responsesuccess", error.message);
+      //     }else {
+      //       console.log("responsesuccess", 'Generic error');
+      //     }         
+      // });
+      // };
+      // let NewthumbnailSectionsData = thumbnailSectionsData.map((item, i) => {
+      //   let thumbNailData = actThumbnailDataOne(item ? item : []);
+      //   return thumbNailData;
+      // });
+      data = data.concat([caroselData], [thumbnailSData], [consfigInfo]);
+      
+      console.log('6666', data);
       // Pass data to the page via props
       return { props: { data } }
   });
@@ -210,5 +224,16 @@ export const getServerSideProps = wrapper.getServerSideProps((store) =>
         });
   } else singleUrl = '';
   return singleUrl;
+  }
+  export function getFilteredSection(fs) {
+    let newFilteredSections = [];
+    fs.map((item, i)=>{
+      if(item.sectionType === "CONTINUEWATCH"){
+        console.log("CONTINUEWATCH", item.sectionType === "CONTINUEWATCH")
+      }else{
+        newFilteredSections.push(item);
+      }
+    });
+    return newFilteredSections;
   }
   
