@@ -4,7 +4,10 @@
   align-items: center !important;
   min-height: calc(100vh - 73px);
 }
-.alignCenter {
+.refBox {
+  width: 100%;
+  height: 100px;
+  background-color: #222;
   text-align: center;
 }
 .container {
@@ -46,7 +49,7 @@
   display: flex;
   transition: transform 0.5s;
   transform: translateX(calc(-100% * var(--current-slide)));
-  height: 85vh;
+  height: 93vh;
   position: relative;
 }
 .SLIDER .SLIDE{
