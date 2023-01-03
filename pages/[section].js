@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { pid } from 'process';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import Carousel from '../components/Carousel';
 import Slider from '../components/Slider';
@@ -10,59 +10,84 @@ import Head from 'next/head';
 import {wrapper} from '../redux/store';
 import { SET_CONFIG_DATA, SET_FILTEREDSECTIONS } from "../redux/slices/configSlice";
 import { getThumbNailData } from "../auth.server";
-import useOnScreen from "../useOnScreen";
+import SlideAnimation from '../components/SliderAnimation';
+import { useInView } from 'react-intersection-observer';
 
 export default function Section ({ data })  {
     let [carouselData, setCarouselData] = React.useState(data[0]);
     let [thumbNailData, setThumbNailData] = React.useState(data[1]);
-    let [isThumbNailLoading, setIsThumbNailLoading] = React.useState(false);
+    let [isThumbNailLoading, setIsThumbNailLoading] = React.useState(true);
+    let [counter, setCounter] = React.useState(2);
+
     let user = useSelector((state) => state.config);
     const isSSR = () =>{return typeof window  == undefined};
     const router = useRouter();
     const section = router.query.section;
+    const options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 1.0
+    };
+    const { ref, inView, entry } = useInView(options);
+  
     React.useEffect(() => {
         setCarouselData(data[0]);
         setThumbNailData(data[1]);
-      window.addEventListener("scroll", () => {  
-        handleScroll();
-      }, { once: true });
+        setCounter(2);
+        setIsThumbNailLoading(true);
     }, [router.events, data]);
-    const handleScroll = async () => {
-      setIsThumbNailLoading(true); 
+    React.useEffect(() => {      
+      inView && handleScroll(counter);
+    }, [inView]);
+
+    const handleScroll = async (count) => { 
+      console.log("counter", count);
+      setCounter(count+1);
       let configContent = user.configData;
       let filteredSections = [];
       let thumbnailSections = [];
       let thumbnailSectionsData = [];
+      console.log("configContent", configContent)
       configContent && configContent.map((x, i)=>{
         if(x.id.toUpperCase() == section.toUpperCase()){
         filteredSections = x.sections;
       }});    
       getFilteredSection(filteredSections);
       let newFilteredSections = getFilteredSection(filteredSections) ? getFilteredSection(filteredSections) : [];
-      thumbnailSections = newFilteredSections.slice(2, 5);
       console.log("++++", thumbnailSections);
-      // const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+item[3].endpoint+`?`+getParams(item[4].parameters);let itemLength = thumbnailSections.length;
-      let itemLength = thumbnailSections.length;
-      for(let i =0; i< itemLength; i++){
-        let item = thumbnailSections[i];
-        const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+item.endpoint+`?`+getParams(item.parameters);
-        await getThumbNailData(thumbNailUrl).then((response) => {
-          setIsThumbNailLoading(true);
-          thumbnailSectionsData = [...thumbnailSectionsData, response.success.data];
-      }).catch((error) => {
-          if (error.status == 429) {
-            console.log("responsesuccess", error.message);
-          }else {
-            console.log("responsesuccess", 'Generic error');
-          }         
-      });
-      };
-      let NewthumbnailSectionsData = thumbnailSectionsData.map((item, i) => {
-        let thumbNailData = actThumbnailDataOne(item ? item : []);
-        return thumbNailData;
-      });
-      setIsThumbNailLoading(false);
-      setThumbNailData([...data[1], ...NewthumbnailSectionsData]);
+      let itemLength = newFilteredSections.length;
+      if(count >= itemLength){
+        setIsThumbNailLoading(false);
+        return ;
+      }
+      const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+newFilteredSections[count].endpoint+`?`+getParams(newFilteredSections[count].parameters);
+      console.log("itemLength", itemLength);
+      await getThumbNailData(thumbNailUrl).then((response) => {
+        thumbnailSectionsData = response.success.data;
+        }).catch((error) => {
+            if (error.status == 429) {
+              console.log("responsesuccess", error.message);
+            }else {
+              console.log("responsesuccess", 'Generic error');
+            }
+           });
+      // for(let i =0; i< itemLength; i++){
+      //   let item = thumbnailSections[i];
+      //   const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+item.endpoint+`?`+getParams(item.parameters);
+      //   await getThumbNailData(thumbNailUrl).then((response) => {
+      //     thumbnailSectionsData = [...thumbnailSectionsData, response.success.data];
+      // }).catch((error) => {
+      //     if (error.status == 429) {
+      //       console.log("responsesuccess", error.message);
+      //     }else {
+      //       console.log("responsesuccess", 'Generic error');
+      //     }         
+      // });
+      // };
+      console.log("thumbnailSectionsData", thumbnailSectionsData);
+      let NewthumbnailSectionsData = actThumbnailDataOne(thumbnailSectionsData ? thumbnailSectionsData : []);
+      console.log("NewthumbnailSectionsData", NewthumbnailSectionsData);
+      setThumbNailData([...thumbNailData, NewthumbnailSectionsData]);
       console.log("ThumbNailData", thumbNailData);
     };
       return (
@@ -71,6 +96,7 @@ export default function Section ({ data })  {
             <title>{section}</title>
             <meta name="description" content={section} />
           </Head>
+          <main>
           {
              data.length > 0 ? <>
              <Carousel data={carouselData} />
@@ -79,9 +105,11 @@ export default function Section ({ data })  {
                 <Slider data={section} slideIndex={index} key={index}/>
               ))
              }
-             {isThumbNailLoading && <div className={styles.refBox}><h1>Loading........</h1></div>}
+             {isThumbNailLoading && 
+             <div ref={ref}><SlideAnimation /></div>}
             </> : <></>
-          }        
+          }   
+          </main>     
           </>
       )
 };
@@ -100,11 +128,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) =>
         'Cache-Control',
         'public, s-maxage=100, stale-while-revalidate=59'
       );
-      const configUrl = 'https://d2xowqqrpfxxjf.cloudfront.net/noorplay/web-noorplayv2.json';
-      const configRes = await fetch(configUrl);
-      const configContent = await configRes.json();
-      store.dispatch(SET_CONFIG_DATA(configContent.screens));
-      configContent.screens && configContent.screens.map((x, i)=>{
+      conFigScreen && conFigScreen.map((x, i)=>{
         if(x.id.toUpperCase() == section){
         filteredSections = x.sections;
       }});    
@@ -125,7 +149,7 @@ export const getServerSideProps = wrapper.getServerSideProps((store) =>
       let newThumbNailData = await actThumbnailDataOne(thumbnailContent.data ? thumbnailContent.data : []);
       let thumbnailSData = [];
       thumbnailSData = thumbnailSData.concat([newThumbNailData]);
-      data = data.concat([caroselData], [thumbnailSData], [consfigInfo]);
+      data = data.concat([caroselData], [thumbnailSData], [newFilteredSections]);
       
       console.log('6666', data);
       // Pass data to the page via props

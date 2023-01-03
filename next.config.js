@@ -16,15 +16,15 @@ const nextConfig = {
       },
     ];
   },
-  // async redirects() {
-  //   return [
-  //     {
-  //       source: '/',
-  //       destination: '/Home',
-  //       permanent: true,
-  //     },
-  //   ]
-  // },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/Home',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig

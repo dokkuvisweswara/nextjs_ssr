@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import styles from '../styles/Slider.module.css';
 import Image from 'next/image';
+import SlideAnimation from '../components/SliderAnimation';
 
 export default function Slider({ data, slideIndex }) {
     const router = useRouter();
-    const emptyData = [1, 2, 3, 4]
     const [tabsBoxOne, setTabsBoxOne] = useState(false);
     useEffect(() => {
         let isDragging = false;
@@ -73,11 +73,7 @@ export default function Slider({ data, slideIndex }) {
                     placeholder="blur"
                     />
             </div>
-            )) : emptyData.map((item, index)=> (
-                <div className={styles.TAB} onClick={()=>goToDetailsPage(item)} key={index}>
-                    <div className={styles.IMG}></div>
-                </div>
-                ))
+            )) : <SlideAnimation />
             }
         </div>
         </div>
