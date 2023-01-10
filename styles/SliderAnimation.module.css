@@ -1,0 +1,79 @@
+.WRAPPER{
+    /* max-width: 1240px; */
+    height: 200px;
+    margin: 10px 0;
+    /* overflow-x: hidden; */
+    overflow: hidden;
+    position: relative;
+    padding: 0 10px;
+}
+.WRAPPER .TABSBOX{
+    display: flex;
+    transition: .4s ease-out;
+    width: 100%;
+    height: 100%;
+    /* overflow: hidden; */
+    overflow-y: hidden; 
+    scroll-behavior: smooth;
+    
+}
+.TABSBOX::-webkit-scrollbar{
+  display: none;
+}
+
+.TABSBOX .TAB{
+    margin: 0 5px;
+    width: 300px;
+    height: 100%;
+    background: #71748a;
+    background-image: linear-gradient(to right, #71748a 0%, #a1a19f 20%, #71748a 40%, #71748a 100%);
+    background-repeat: no-repeat;
+    background-size: 800px 100%; 
+    display: inline-block;
+    position: relative; 
+    
+    animation-duration: 1s;
+    animation-fill-mode: forwards; 
+    animation-iteration-count: infinite;
+    animation-name: placeholderShimmer;
+    animation-timing-function: linear;
+}
+  /* .TAB .IMG{
+      width: 300px;
+      height: 100%;
+      background: #71748a;
+      background-image: linear-gradient(to right, #71748a 0%, #a1a19f 20%, #71748a 40%, #71748a 100%);
+      background-repeat: no-repeat;
+      background-size: 800px 100%; 
+      display: inline-block;
+      position: relative; 
+      
+      animation-duration: 1s;
+      animation-fill-mode: forwards; 
+      animation-iteration-count: infinite;
+      animation-name: placeholderShimmer;
+      animation-timing-function: linear;
+  } */
+
+  @keyframes placeholderShimmer {
+    0% {
+      background-position: -468px 0;
+    }
+    
+    100% {
+      background-position: 468px 0; 
+    }
+  }
+
+  .TAB:nth-child(0){
+    animation-delay: 0s;
+  }
+  .TAB:nth-child(1){
+    animation-delay: 0.2s;
+  }
+  .TAB:nth-child(2){
+    animation-delay: 0.4s;
+  }
+  .TAB:nth-child(3){
+    animation-delay: 0.6s;
+  }

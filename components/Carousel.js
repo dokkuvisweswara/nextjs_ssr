@@ -5,13 +5,13 @@ import { useRouter } from 'next/router';
 import Head from "next/head";
 
 export default function Carousel({ data }) {
-    console.log("data", data);
+    console.log("data-->", data);
     const router = useRouter();
     const { id } = router.query;
     let [currentSlide, setCurrentSlide] = useState(0);
     let [numSlides, setNumSlides] = useState(0);
     let [carousel, setCarousel] = useState(null);
-    let [interval, setInterval] = useState(null);
+    let [interval, setInterval] = useState(null);   
     useEffect(() => {
         if (!router.isReady) return;
         setCurrentSlide(0);
@@ -90,7 +90,7 @@ export default function Carousel({ data }) {
                             <div className={styles.SLIDER} data-carousel-slides-container>
                                 {
                                     data.map((x, index) => (
-                                        slider(x, index)
+                                        <CarouselSlider data={x} i={index} key={index}/>
                                     ))
                                 }
                             </div>
@@ -128,7 +128,8 @@ export default function Carousel({ data }) {
             </div>
     );
 
-    function slider(data, i) {
+    function CarouselSlider({data, i}) {
+        console.log("data--i", data, i)
         // const getHotspotImage = (sectionListDetailSingle) => {
         //     let single = []
         //     single = sectionListDetailSingle.filter((img) => {

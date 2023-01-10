@@ -21,6 +21,10 @@
 .siteLogo img{
     height: 100%;
     width: 100%;
+    padding: 10px 30px;
+    opacity: 0.5;
+    border-radius: 30px;
+    background: repeating-linear-gradient(45deg, black, transparent 100px);
 }
 .mobileNav{
     display: none;

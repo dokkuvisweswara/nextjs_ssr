@@ -30,7 +30,7 @@ export default function Header() {
         <header className={styles.headerArea}>
         <div className={styles.headerContainer}>
             <div className={styles.siteLogo}>
-                <Link href='/Home'>
+                <Link href='/HOME'>
                     <Image 
                         unoptimized
                         src="https://www.mobiotics.com/static/media/MobioticsLogo.aef4f60398cf176c355e86288c27b9ce.svg"
@@ -48,7 +48,7 @@ export default function Header() {
                 <ul className={styles.PrimaryMenue}>
                     {
                        staticMenue && staticMenue.map((item, index) =>(
-                        item.dataType == "CONTENT" && <li key={index} onClick={() => toggMenue()}> <Link href={item.title.default} className={router.asPath.toLowerCase() == '/'+item.title.default.toLowerCase() ? styles.active : ""}> {item.title.default} </Link> </li>                            
+                        item.dataType == "CONTENT" && <li key={index} onClick={() => toggMenue()}> <Link href={item.title.default.toUpperCase()} className={router.asPath.toLowerCase() == '/'+item.title.default.toLowerCase() ? styles.active : ""}> {item.title.default} </Link> </li>                            
                         ))
                     }
                 </ul>
