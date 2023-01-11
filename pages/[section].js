@@ -14,20 +14,21 @@ import SlideAnimation from '../components/SliderAnimation';
 import { useInView } from 'react-intersection-observer';
 
 export default function Section ({ data })  {
+  console.log("data.....Y", data[1]);
     let [carouselData, setCarouselData] = React.useState(data[0]);
     let [thumbNailData, setThumbNailData] = React.useState(data[1]);
     let [isThumbNailLoading, setIsThumbNailLoading] = React.useState(true);
     let [counter, setCounter] = React.useState(2);
 
     let user = useSelector((state) => state.config);      
-    console.log("data--->", user);
+    console.log("data---||--", thumbNailData);
     const isSSR = () =>{return typeof window  == undefined};
     const router = useRouter();
     const section = router.query.section;
     const options = {
       root: null,
       rootMargin: "0px",
-      threshold: 1.0
+      threshold: 0.1
     };
     const { ref, inView, entry } = useInView(options);
   
@@ -37,17 +38,17 @@ export default function Section ({ data })  {
         setCounter(2);
         setIsThumbNailLoading(true);
     }, [router.events, data]);
-    React.useEffect(() => {      
+    React.useEffect(() => {
+      console.log("counter", counter);      
       inView && handleScroll(counter);
     }, [inView]);
 
-    const handleScroll = async (count) => { 
-      console.log("counter", count);
-      setCounter(count+1);
+    const handleScroll = async (count) => {
       let configContent = user.configData;
       let filteredSections = [];
       let thumbnailSections = [];
       let thumbnailSectionsData = [];
+      let thumbnaiData = {};
       console.log("configContent", configContent)
       configContent && configContent.map((x, i)=>{
         if(x.id.toUpperCase() == section.toUpperCase()){
@@ -57,39 +58,29 @@ export default function Section ({ data })  {
       let newFilteredSections = getFilteredSection(filteredSections) ? getFilteredSection(filteredSections) : [];
       console.log("++++", thumbnailSections);
       let itemLength = newFilteredSections.length;
+      console.log("coming", count, itemLength);
       if(count >= itemLength){
         setIsThumbNailLoading(false);
-        return ;
-      }
-      const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+newFilteredSections[count].endpoint+`?`+getParams(newFilteredSections[count].parameters);
-      console.log("itemLength", itemLength);
+      }   
+      setCounter(count+1);
+      thumbnaiData.title = newFilteredSections[count]?.title?.default;
+      // thumbnaiData.data = [];
+      thumbnaiData.title && setThumbNailData(oldArray => [...oldArray, thumbnaiData]);
+      const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+newFilteredSections[count]?.endpoint+`?`+getParams(newFilteredSections[count]?.parameters);
       await getThumbNailData(thumbNailUrl).then((response) => {
-        thumbnailSectionsData = response.success.data;
+        // thumbnailSectionsData = response.success.data;
+        thumbnaiData.data = actThumbnailDataOne(response.success.data ? response.success.data : []);
         }).catch((error) => {
             if (error.status == 429) {
               console.log("responsesuccess", error.message);
             }else {
               console.log("responsesuccess", 'Generic error');
             }
-           });
-      // for(let i =0; i< itemLength; i++){
-      //   let item = thumbnailSections[i];
-      //   const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+item.endpoint+`?`+getParams(item.parameters);
-      //   await getThumbNailData(thumbNailUrl).then((response) => {
-      //     thumbnailSectionsData = [...thumbnailSectionsData, response.success.data];
-      // }).catch((error) => {
-      //     if (error.status == 429) {
-      //       console.log("responsesuccess", error.message);
-      //     }else {
-      //       console.log("responsesuccess", 'Generic error');
-      //     }         
-      // });
-      // };
-      console.log("thumbnailSectionsData", thumbnailSectionsData);
-      let NewthumbnailSectionsData = actThumbnailDataOne(thumbnailSectionsData ? thumbnailSectionsData : []);
-      console.log("NewthumbnailSectionsData", NewthumbnailSectionsData);
-      setThumbNailData([...thumbNailData, NewthumbnailSectionsData]);
-      console.log("ThumbNailData", thumbNailData);
+          });
+      setThumbNailData(oldArray => [...oldArray]);
+      // console.log("ThumbNailData", thumbNailData);
+      // const unique = [...new Map(thumbNailData.map((m) => [m.title, m])).values()];
+      // console.log("LOVEYOU", thumbnaiData);
     };
       return (
           <>
@@ -99,22 +90,26 @@ export default function Section ({ data })  {
           </Head>
           <main>
           {
-             data.length > 0 ? <>
-             <Carousel data={carouselData} />
-             {
-              thumbNailData && thumbNailData.map((section, index) =>(              
-                <Slider data={section} slideIndex={index} key={index}/>
+            data.length > 0 ? <>
+            <Carousel data={carouselData} />
+            {
+              thumbNailData && thumbNailData.map((section, index) =>(  
+                <div key={index}>
+                <h1 className={styles.thumbnailTitle}>{section.title}</h1>            
+                <Slider data={section.data} slideIndex={index}/>
+                </div>
               ))
-             }
-             {isThumbNailLoading && 
-             <div ref={ref}><SlideAnimation /></div>}
+            }
+            {isThumbNailLoading && 
+            <div ref={ref}>
+              <SlideAnimation />
+            </div>}
             </> : <></>
           }   
           </main>     
           </>
       )
 };
-
 
 export const getStaticProps = wrapper.getStaticProps((store) =>
   async (context, sss) => {    // Fetch data from external API 
@@ -129,7 +124,8 @@ export const getStaticProps = wrapper.getStaticProps((store) =>
       let consfigInfo = [];
       let filteredSections = [];
       let thumbnailSections = [];
-      let thumbnailSectionsData = [];
+      let thumbnailSectionsData = {};
+      let finalThumbnailData = [];
       configContent && configContent.screens.map((x, i)=>{
         if(x.id.toUpperCase() == section){
         filteredSections = x.sections;
@@ -140,47 +136,50 @@ export const getStaticProps = wrapper.getStaticProps((store) =>
       const carouselUrl = `https://vcms.mobiotics.com/prodv3/`+newFilteredSections[0].endpoint+`?`+getParams(newFilteredSections[0].parameters);
       const caroselRes = await fetch(carouselUrl, {"headers": {
                           "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VpZCI6IjE5NDQ2NTg3NTk1NTMxNzMiLCJkZXZpY2V0eXBlIjoiUEMiLCJkZXZpY2VvcyI6IldJTkRPV1MiLCJwcm92aWRlcmlkIjoibm9vcnBsYXkiLCJ0aW1lc3RhbXAiOjE2NzMzMjkzMTksImFwcHZlcnNpb24iOiI0Ni40LjAiLCJpcCI6IjE1LjE1OC40Mi4zOCIsIkdlb0xvY0lwIjoiMTcxLjc2LjcxLjkyIiwidmlzaXRpbmdjb3VudHJ5IjoiSU4iLCJpc3N1ZXIiOiJub29ycGxheSIsImV4cGlyZXNJbiI6NjA0ODAwLCJwcm92aWRlcm5hbWUiOiJOb29yUGxheSIsImlhdCI6MTY3MzMyOTMwNiwiZXhwIjoxNjczOTM0MTA2LCJpc3MiOiJub29ycGxheSJ9.lt8jmtxWTJkToFCncBnybDrVnM5Fba-W3lQuCF0r-jY",
-                        }, "method": "GET"},);
+                        }, "method": "GET"});
       const caroselContent = await caroselRes.json();
       const caroselData = actACrouselDataOne(caroselContent.data ? caroselContent.data : []);
+      thumbnailSectionsData.title = thumbnailSections[0].title.default;
       const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+thumbnailSections[0].endpoint+`?`+getParams(thumbnailSections[0].parameters);
       const thumbNailRes = await fetch(thumbNailUrl, {"headers": {
                               "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VpZCI6IjE5NDQ2NTg3NTk1NTMxNzMiLCJkZXZpY2V0eXBlIjoiUEMiLCJkZXZpY2VvcyI6IldJTkRPV1MiLCJwcm92aWRlcmlkIjoibm9vcnBsYXkiLCJ0aW1lc3RhbXAiOjE2NzMzMjkzMTksImFwcHZlcnNpb24iOiI0Ni40LjAiLCJpcCI6IjE1LjE1OC40Mi4zOCIsIkdlb0xvY0lwIjoiMTcxLjc2LjcxLjkyIiwidmlzaXRpbmdjb3VudHJ5IjoiSU4iLCJpc3N1ZXIiOiJub29ycGxheSIsImV4cGlyZXNJbiI6NjA0ODAwLCJwcm92aWRlcm5hbWUiOiJOb29yUGxheSIsImlhdCI6MTY3MzMyOTMwNiwiZXhwIjoxNjczOTM0MTA2LCJpc3MiOiJub29ycGxheSJ9.lt8jmtxWTJkToFCncBnybDrVnM5Fba-W3lQuCF0r-jY",
-                            }, "method": "GET"},);
+                            }, "method": "GET"});
       const thumbnailContent = await thumbNailRes.json();
       let newThumbNailData = await actThumbnailDataOne(thumbnailContent.data ? thumbnailContent.data : []);
       let thumbnailSData = [];
-      thumbnailSData = thumbnailSData.concat([newThumbNailData]);
-      data = data.concat([caroselData], [thumbnailSData], [newFilteredSections]);
-      
-      console.log('6666', data);
+      // thumbnailSData = thumbnailSData.concat([newThumbNailData]);
+      thumbnailSectionsData.data = newThumbNailData;
+      console.log("777777", thumbnailSectionsData);
+      thumbnailSData.push(thumbnailSectionsData);
+      data = data.concat([caroselData], [thumbnailSData]);
       // Pass data to the page via props
-      return { props: { data }, revalidate: 60, }
+      console.log("888888", data)
+      return { props: { data }, revalidate: 60}
   });
 
-  export async function getStaticPaths() {
-    const configUrl = 'https://d2xowqqrpfxxjf.cloudfront.net/noorplay/web-noorplayv2.json';
-    const configRes = await fetch(configUrl);
-    const configContent = await configRes.json();
-    // Get the paths we want to pre-render based on posts
-      let screens = [];
-      configContent.screens.map((screen) => {
-        if(screen.id == 'EID-PLAYS' ||  screen.id == 'FREEMIUM' || screen.id == 'HOME-KIDS'){            
-        console.log("777777", screens);
-        }else {
-          screens.push(screen);
-        }
-      });
-      const paths = screens.map((post) => ({
-      
-      params: { section: post.id.toUpperCase() },
-    }))
-  
-    // We'll pre-render only these paths at build time.
-    // { fallback: blocking } will server-render pages
-    // on-demand if the path doesn't exist.
-    return { paths, fallback: 'blocking' }
-  }
+export async function getStaticPaths() {
+  const configUrl = 'https://d2xowqqrpfxxjf.cloudfront.net/noorplay/web-noorplayv2.json';
+  const configRes = await fetch(configUrl);
+  const configContent = await configRes.json();
+  // Get the paths we want to pre-render based on posts
+    let screens = [];
+    configContent.screens.map((screen) => {
+      if(screen.id == 'EID-PLAYS' ||  screen.id == 'FREEMIUM' || screen.id == 'HOME-KIDS'){            
+      console.log("666666", screens);
+      }else {
+        screens.push(screen);
+      }
+    });
+    const paths = screens.map((post) => ({
+    
+    params: { section: post.id.toUpperCase() },
+  }))
+
+  // We'll pre-render only these paths at build time.
+  // { fallback: blocking } will server-render pages
+  // on-demand if the path doesn't exist.
+  return { paths, fallback: 'blocking' }
+};
 
 //ServerSide Props....
 // export const getServerSideProps = wrapper.getServerSideProps((store) =>
@@ -218,95 +217,100 @@ export const getStaticProps = wrapper.getStaticProps((store) =>
 //       let thumbnailSData = [];
 //       thumbnailSData = thumbnailSData.concat([newThumbNailData]);
 //       data = data.concat([caroselData], [thumbnailSData], [newFilteredSections]);
-      
+    
 //       console.log('6666', data);
 //       // Pass data to the page via props
 //       return { props: { data } }
 //   });
-  export function getParams(params) {
-    var urlParam = [];
-    for (var i in params){
-      urlParam.push(encodeURI(i) + "=" + encodeURI(params[i]));
-    }
-    urlParam =  urlParam.join("&").toString();
-    urlParam =  urlParam.replaceAll('%22', "");
-    return urlParam;
+export function getParams(params) {
+  var urlParam = [];
+  for (var i in params){
+    urlParam.push(encodeURI(i) + "=" + encodeURI(params[i]));
   }
-  export function actACrouselDataOne(data){
-    let filteredArray = [];
-    if(data.length >=0){
-      return filteredArray = data.map((item, index)=> {
-        let filteredData = {};
-        filteredData.uid = item.category;
-        filteredData.id = item.objectid;
-        filteredData.title = item.title;
-        filteredData.image = getHotspotImageOne(item.poster);
-        return filteredData;
-      });       
-    }else{ 
-      return [];
-    }
-  }
-  export function actThumbnailDataOne(data){
-    let filteredArray = [];
-    if(data.length >=0){
-      return filteredArray = data.map((item, index)=> {
-        let filteredData = {};
-        filteredData.uid = item.category;
-        filteredData.id = item.objectid;
-        filteredData.title = item.title;
-        filteredData.image = getHotspotImageOne(item.poster);
-        return filteredData;
-      });       
-    }else{ 
-      return [];
-    }
-  }
-  export const getHotspotImageOne = (sectionListDetailSingle) => {
-    let single = [];
-    let singleUrl = '';
-    sectionListDetailSingle.filter((img) => {
+  urlParam =  urlParam.join("&").toString();
+  urlParam =  urlParam.replaceAll('%22', "");
+  return urlParam;
+};
 
-      if (img.postertype === "LANDSCAPE") {
-        single = img.filelist;
-      }
-    });
-    if (single.length > 0) {  
-        single.filter((img) => {
-          if (img.quality === "HD") {
-            singleUrl =  img.filename;
-          }
-        });
-  } else singleUrl = '';
-  return singleUrl;
-}
-  export const actAthumbnailImage = (sectionListDetailSingle) => {
-    let single = [];
-    let singleUrl = '';
-    console.log("cvv", sectionListDetailSingle);
-    sectionListDetailSingle.filter((img) => {
-      if (img.postertype === "PORTRAIT") {
-        single = img.filelist;
-      }
-    });
-    if (single.length > 0) {  
-        single.filter((img) => {
-          if (img.quality === "HD") {
-            singleUrl =  img.filename;
-          }
-        });
-  } else singleUrl = '';
-  return singleUrl;
+export function actACrouselDataOne(data){
+  let filteredArray = [];
+  if(data.length >=0){
+    return filteredArray = data.map((item, index)=> {
+      let filteredData = {};
+      filteredData.uid = item.category;
+      filteredData.id = item.objectid;
+      filteredData.title = item.title;
+      filteredData.image = getHotspotImageOne(item.poster);
+      return filteredData;
+    });       
+  }else{ 
+    return [];
   }
-  export function getFilteredSection(fs) {
-    let newFilteredSections = [];
-    fs.map((item, i)=>{
-      if(item.sectionType === "CONTINUEWATCH"){
-        console.log("CONTINUEWATCH", item.sectionType === "CONTINUEWATCH")
-      }else{
-        newFilteredSections.push(item);
-      }
-    });
-    return newFilteredSections;
+};
+
+export function actThumbnailDataOne(data){
+  let filteredArray = [];
+  if(data.length >=0){
+    return filteredArray = data.map((item, index)=> {
+      let filteredData = {};
+      filteredData.uid = item.category;
+      filteredData.id = item.objectid;
+      filteredData.title = item.title;
+      filteredData.image = getHotspotImageOne(item.poster);
+      return filteredData;
+    });       
+  }else{ 
+    return [];
   }
+};
+
+export const getHotspotImageOne = (sectionListDetailSingle) => {
+  let single = [];
+  let singleUrl = '';
+  sectionListDetailSingle.filter((img) => {
+
+    if (img.postertype === "LANDSCAPE") {
+      single = img.filelist;
+    }
+  });
+  if (single.length > 0) {  
+      single.filter((img) => {
+        if (img.quality === "HD") {
+          singleUrl =  img.filename;
+        }
+      });
+} else singleUrl = '';
+return singleUrl;
+};
+
+export const actAthumbnailImage = (sectionListDetailSingle) => {
+  let single = [];
+  let singleUrl = '';
+  console.log("cvv", sectionListDetailSingle);
+  sectionListDetailSingle.filter((img) => {
+    if (img.postertype === "PORTRAIT") {
+      single = img.filelist;
+    }
+  });
+  if (single.length > 0) {  
+      single.filter((img) => {
+        if (img.quality === "HD") {
+          singleUrl =  img.filename;
+        }
+      });
+} else singleUrl = '';
+return singleUrl;
+};
+
+export function getFilteredSection(fs) {
+  let newFilteredSections = [];
+  fs.map((item, i)=>{
+    if(item.sectionType === "CONTINUEWATCH"){
+      console.log("CONTINUEWATCH", item.sectionType === "CONTINUEWATCH")
+    }else{
+      newFilteredSections.push(item);
+    }
+  });
+  return newFilteredSections;
+};
   

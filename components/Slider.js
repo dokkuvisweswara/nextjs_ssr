@@ -6,6 +6,7 @@ import Image from 'next/image';
 import SlideAnimation from '../components/SliderAnimation';
 
 export default function Slider({ data, slideIndex }) {
+    console.log("data.....Y", data);
     const router = useRouter();
     const [tabsBoxOne, setTabsBoxOne] = useState(false);
     useEffect(() => {
@@ -20,7 +21,8 @@ export default function Slider({ data, slideIndex }) {
         // tabsBox[0].addEventListener("mousedown", () => {isDragging = true;} );
         tabsBox[0].addEventListener("mousemove", dragging);
         // document.addEventListener("mouseup", () => {isDragging = false;});
-    }, [router.isReady]);
+        console.log("555555", data);
+    }, [router.isReady, data]);
     const handlePrevNext = (isPrevious, keyValue) => {
         console.log("isPrevious", keyValue);
         const tabsBox = document.querySelectorAll('[data-tab-box]');
@@ -50,17 +52,17 @@ export default function Slider({ data, slideIndex }) {
                 data-carousel-button-previous
                 onClick={() => handlePrevNext(true, slideIndex)}
             >
-                <span className={`fas fa-chevron-left ${styles.PREVBTN}`}></span>
+            <span className={`fas fa-chevron-left ${styles.PREVBTN}`}></span>
             </button>
             <button
                 className={`${styles.carouselButton} ${styles.carouselButtonNext}`}
                 data-carousel-button-next
                 onClick={() => handlePrevNext(false, slideIndex)}
             >
-                <span className={`fas fa-chevron-right ${styles.NEXTBTN}`}></span>
+            <span className={`fas fa-chevron-right ${styles.NEXTBTN}`}></span>
             </button>
         <div className={styles.TABSBOX} data-tab-box>
-            {data.length >0 ? data.map((item, index)=> (
+            {data?.length >0 ? data?.map((item, index)=> (
             <div className={styles.TAB} onClick={()=>goToDetailsPage(item)} key={index}>
                 <Image 
                     unoptimized 
@@ -68,7 +70,7 @@ export default function Slider({ data, slideIndex }) {
                     alt={item.title}
                     width={200}
                     height={300}
-                    loading="lazy"                    
+                    loading="eager"                    
                     blurDataURL="data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
                     placeholder="blur"
                     />
