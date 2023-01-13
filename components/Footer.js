@@ -1,5 +1,7 @@
 import styles from "../styles/Home.module.css";
 import Image from 'next/image';
+import Link from 'next/link';
+
 export default function Footer () {
     return(
         <>
@@ -8,12 +10,23 @@ export default function Footer () {
             href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
             target="_blank"
             rel="noopener noreferrer"
+            className={styles.anchor}
             >
             Powered by{' '}
             <span className={styles.logo}>
-                <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
+                <Link href='/Home'>
+                    <Image 
+                        unoptimized
+                        src="https://www.mobiotics.com/static/media/MobioticsLogo.aef4f60398cf176c355e86288c27b9ce.svg"
+                        alt='mobiotics logo'
+                        width={100}
+                        height={100}
+                        loading="lazy"
+                        />
+                </Link>
             </span>
             </a>
+            <span class="footer_copyright__nFXY7"><span>Copyright</span> © 2023 Vercel Inc. All rights reserved.</span>
         </div>
         </>
     )

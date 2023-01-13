@@ -27,10 +27,10 @@ export default function Header() {
     }
 
     return(
-        <header className={styles.headerArea}>
+        <div className={styles.headerArea}>
         <div className={styles.headerContainer}>
             <div className={styles.siteLogo}>
-                <Link href='/HOME'>
+                <Link href='/Home'>
                     <Image 
                         unoptimized
                         src="https://www.mobiotics.com/static/media/MobioticsLogo.aef4f60398cf176c355e86288c27b9ce.svg"
@@ -61,7 +61,7 @@ export default function Header() {
                 </ul> 
             </div>
         </div>
-        </header>
+        </div>
     )
 }
 

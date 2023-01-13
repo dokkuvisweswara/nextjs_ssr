@@ -61,15 +61,18 @@ export default function Section ({ data })  {
       console.log("coming", count, itemLength);
       if(count >= itemLength){
         setIsThumbNailLoading(false);
+        return;
       }   
       setCounter(count+1);
+      console.log("newFilteredSections[count]", newFilteredSections[count]);
       thumbnaiData.title = newFilteredSections[count]?.title?.default;
+      thumbnaiData.displayType = newFilteredSections[count]?.displayType;
       // thumbnaiData.data = [];
       thumbnaiData.title && setThumbNailData(oldArray => [...oldArray, thumbnaiData]);
       const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+newFilteredSections[count]?.endpoint+`?`+getParams(newFilteredSections[count]?.parameters);
       await getThumbNailData(thumbNailUrl).then((response) => {
         // thumbnailSectionsData = response.success.data;
-        thumbnaiData.data = actThumbnailDataOne(response.success.data ? response.success.data : []);
+        thumbnaiData.data = actThumbnailDataOne(response.success.data ? response.success.data : [], thumbnaiData.displayType);
         }).catch((error) => {
             if (error.status == 429) {
               console.log("responsesuccess", error.message);
@@ -93,12 +96,16 @@ export default function Section ({ data })  {
             data.length > 0 ? <>
             <Carousel data={carouselData} />
             {
-              thumbNailData && thumbNailData.map((section, index) =>(  
-                <div key={index}>
-                <h1 className={styles.thumbnailTitle}>{section.title}</h1>            
-                <Slider data={section.data} slideIndex={index}/>
-                </div>
-              ))
+              thumbNailData && thumbNailData.map((section, index) =>{
+               return( section.displayType === "PORTRAIT" ?
+                  <div key={index}>
+                  <h1 className={styles.thumbnailTitle}>{section.title}</h1>            
+                  <Slider data={section.data} slideIndex={index} displayType={section.displayType}/>
+                  </div> : <div key={index}>
+                  <h1 className={styles.thumbnailTitle}>{section.title}</h1>            
+                  <Slider data={section.data} slideIndex={index} displayType={section.displayType}/>
+                  </div>)
+                })
             }
             {isThumbNailLoading && 
             <div ref={ref}>
@@ -139,21 +146,20 @@ export const getStaticProps = wrapper.getStaticProps((store) =>
                         }, "method": "GET"});
       const caroselContent = await caroselRes.json();
       const caroselData = actACrouselDataOne(caroselContent.data ? caroselContent.data : []);
-      thumbnailSectionsData.title = thumbnailSections[0].title.default;
+      thumbnailSectionsData.title = thumbnailSections[0]?.title.default;
+      thumbnailSectionsData.displayType = thumbnailSections[0]?.displayType;
       const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+thumbnailSections[0].endpoint+`?`+getParams(thumbnailSections[0].parameters);
       const thumbNailRes = await fetch(thumbNailUrl, {"headers": {
                               "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VpZCI6IjE5NDQ2NTg3NTk1NTMxNzMiLCJkZXZpY2V0eXBlIjoiUEMiLCJkZXZpY2VvcyI6IldJTkRPV1MiLCJwcm92aWRlcmlkIjoibm9vcnBsYXkiLCJ0aW1lc3RhbXAiOjE2NzMzMjkzMTksImFwcHZlcnNpb24iOiI0Ni40LjAiLCJpcCI6IjE1LjE1OC40Mi4zOCIsIkdlb0xvY0lwIjoiMTcxLjc2LjcxLjkyIiwidmlzaXRpbmdjb3VudHJ5IjoiSU4iLCJpc3N1ZXIiOiJub29ycGxheSIsImV4cGlyZXNJbiI6NjA0ODAwLCJwcm92aWRlcm5hbWUiOiJOb29yUGxheSIsImlhdCI6MTY3MzMyOTMwNiwiZXhwIjoxNjczOTM0MTA2LCJpc3MiOiJub29ycGxheSJ9.lt8jmtxWTJkToFCncBnybDrVnM5Fba-W3lQuCF0r-jY",
                             }, "method": "GET"});
       const thumbnailContent = await thumbNailRes.json();
-      let newThumbNailData = await actThumbnailDataOne(thumbnailContent.data ? thumbnailContent.data : []);
+      let newThumbNailData =  actThumbnailDataOne(thumbnailContent.data ? thumbnailContent.data : [], thumbnailSectionsData.displayType);
       let thumbnailSData = [];
       // thumbnailSData = thumbnailSData.concat([newThumbNailData]);
       thumbnailSectionsData.data = newThumbNailData;
-      console.log("777777", thumbnailSectionsData);
       thumbnailSData.push(thumbnailSectionsData);
       data = data.concat([caroselData], [thumbnailSData]);
       // Pass data to the page via props
-      console.log("888888", data)
       return { props: { data }, revalidate: 60}
   });
 
@@ -248,15 +254,17 @@ export function actACrouselDataOne(data){
   }
 };
 
-export function actThumbnailDataOne(data){
+export function actThumbnailDataOne(data, dtype){
   let filteredArray = [];
   if(data.length >=0){
+    console.log("helloooooooo", data);
     return filteredArray = data.map((item, index)=> {
       let filteredData = {};
       filteredData.uid = item.category;
       filteredData.id = item.objectid;
       filteredData.title = item.title;
-      filteredData.image = getHotspotImageOne(item.poster);
+      // filteredData.image = getHotspotImageOne(item.poster);
+      filteredData.image = actAthumbnailImage(item.poster, dtype);
       return filteredData;
     });       
   }else{ 
@@ -283,18 +291,30 @@ export const getHotspotImageOne = (sectionListDetailSingle) => {
 return singleUrl;
 };
 
-export const actAthumbnailImage = (sectionListDetailSingle) => {
+export const actAthumbnailImage = (sectionListDetailSingle, x) => {
   let single = [];
   let singleUrl = '';
-  console.log("cvv", sectionListDetailSingle);
+  console.log("cvvv", sectionListDetailSingle);
   sectionListDetailSingle.filter((img) => {
+    if(x === "PORTRAIT"){
+    if(sectionListDetailSingle.length > 1){
     if (img.postertype === "PORTRAIT") {
       single = img.filelist;
     }
+  }else{
+    if (img.postertype === "LANDSCAPE") {
+      single = img.filelist;
+    }
+  }
+  }else{
+    if (img.postertype === "LANDSCAPE") {
+      single = img.filelist;
+    }
+  }
   });
   if (single.length > 0) {  
       single.filter((img) => {
-        if (img.quality === "HD") {
+        if (img.quality === "LOW") {
           singleUrl =  img.filename;
         }
       });

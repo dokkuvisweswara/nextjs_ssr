@@ -24,7 +24,7 @@
     padding: 10px 30px;
     opacity: 0.5;
     border-radius: 30px;
-    background: repeating-linear-gradient(45deg, black, transparent 100px);
+    background: repeating-linear-gradient(45deg, #ffff, transparent 100px);
 }
 .mobileNav{
     display: none;
@@ -96,6 +96,9 @@
 /* Responsive css */
 
 @media only screen and (max-width: 900px){
+    .headerArea{
+        padding: 0 10px !important; 
+    }
     .headerContainer{
         display: flex;
         justify-content: space-between;
@@ -107,7 +110,7 @@
         float: none;
         position: absolute;
         background: #142440;
-        width: 40%;
+        width: 50%;
         right: 0;
         top: 73px;
         padding: 30px 0px;
@@ -115,6 +118,11 @@
         clip-path: circle(0% at 100% 0% );
         transition: all .8s;
         z-index: 9999;
+    }
+    .siteLogo img{
+        width: 75%;
+        background: repeating-linear-gradient(45deg, #ffff, transparent 50%);
+        padding: 8px 20px;
     }
     .PrimaryMenue li{
         display: block;

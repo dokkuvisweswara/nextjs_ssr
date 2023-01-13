@@ -5,8 +5,9 @@ import styles from '../styles/Slider.module.css';
 import Image from 'next/image';
 import SlideAnimation from '../components/SliderAnimation';
 
-export default function Slider({ data, slideIndex }) {
-    console.log("data.....Y", data);
+export default function Slider({ data, slideIndex, displayType }) {
+
+    console.log("data.....Y", displayType);
     const router = useRouter();
     const [tabsBoxOne, setTabsBoxOne] = useState(false);
     useEffect(() => {
@@ -46,7 +47,7 @@ export default function Slider({ data, slideIndex }) {
     }
     return (
         <div className={styles.main}>
-        <div className={styles.WRAPPER}>
+        <div className={displayType === "PORTRAIT" ? styles.WRAPPER : styles.NOWRAPPER}>
             <button
                 className={`${styles.carouselButton} ${styles.carouselButtonPrevious}`}
                 data-carousel-button-previous
@@ -63,7 +64,7 @@ export default function Slider({ data, slideIndex }) {
             </button>
         <div className={styles.TABSBOX} data-tab-box>
             {data?.length >0 ? data?.map((item, index)=> (
-            <div className={styles.TAB} onClick={()=>goToDetailsPage(item)} key={index}>
+            <div className={displayType === "PORTRAIT" ? styles.TAB : styles.NOTAB} onClick={()=>goToDetailsPage(item)} key={index}>
                 <Image 
                     unoptimized 
                     src={item.image} 
