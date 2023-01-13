@@ -8,7 +8,7 @@
     padding: 0 10px;
 }
 .NOWRAPPER{
-    /* height: 150px; */
+    height: 150px;
     margin: 10px 0;
     /* overflow-x: hidden; */
     overflow: hidden;
@@ -19,7 +19,7 @@
     display: flex;
     transition: .4s ease-out;
     width: 100%;
-    height: auto;
+    height: 100%;
     /* overflow: hidden; */
     overflow-y: hidden; 
     scroll-behavior: smooth;
@@ -29,7 +29,7 @@
   display: flex;
   transition: .4s ease-out;
   width: 100%;
-  height: auto;
+  height: 100%;
   /* overflow: hidden; */
   overflow-y: hidden; 
   scroll-behavior: smooth;
@@ -44,7 +44,7 @@
 }
 .TABSBOX.dragging .TAB{
   user-select: none;
-  height: 150px !important;
+  height: 100% !important;
 }
 .TABSBOX.dragging .TAB img{
   user-select: none;
@@ -52,13 +52,13 @@
 }
 .TABSBOX .TAB{
     margin: 0 10px;
-    height: 150px;
+    height: 100%;
     cursor: pointer;
     border-radius: 20px;
 }
 .TABSBOX .NOTAB{
   margin: 0 5px;
-  height: 150px;
+  height: 100%;
   cursor: pointer;
   border-radius: 20px;
 }
