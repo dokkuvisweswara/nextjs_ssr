@@ -25,8 +25,8 @@ export default function Login() {
 
   const handleSubmit = () => {
     localStorage.setItem('userName', userName);
-    Router.push('/Home');
     dispacth(SET_PROFILE_NAME(userName));
+    Router.push('/Home');
   }
   const loginForm = () => {
     return (
