@@ -9,7 +9,7 @@ const About = ({data}) => {
         <h1>About........</h1>
         <ul>
             {data && data.map((item, index)=> (
-                <li>{item.title}</li>
+                <li key={index}>{item.title}</li>
             ))}
         </ul>
         </div>
