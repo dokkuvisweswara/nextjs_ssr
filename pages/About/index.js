@@ -3,12 +3,13 @@ import styles from '../../styles/Details.module.css';
 
 const About = ({data}) => {
     console.log("Huhooooo---", data);
+    let locaValue = localStorage.getItem('Active');
     return(
         <div className={styles.detailsContainer}>
         <h1>About........</h1>
         <ul>
             {data && data.map((item, index)=> (
-                <li key={index}>{item.title}</li>
+                locaValue ? <li key={index}>{item.title}</li> : <li key={index}>{item.sectionID}</li>
             ))}
         </ul>
         </div>
