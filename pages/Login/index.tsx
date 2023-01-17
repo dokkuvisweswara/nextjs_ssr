@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Head from "next/head";
 import styles from '../../styles/Login.module.css';
 import Redirect from '../../components/Redirect';
+import NextButton from '../../components/NextButton';
 
 export default function Login() {
   const [userName, setUserName] = useState('');
@@ -23,7 +24,8 @@ export default function Login() {
     }
   }, [router, user]);
 
-  const handleSubmit = () => {
+  const handleSubmit = (data:any) => {
+    console.log("any", data);
     localStorage.setItem('userName', userName);
     dispacth(SET_PROFILE_NAME(userName));
     Router.push('/Home');
@@ -39,7 +41,8 @@ export default function Login() {
             <div className={styles.innerForm}>
               <input type="text" name="name" value={userName} onChange={(event) => setUserName(event.target.value)} placeholder="userName" />
               <input type="password" name="password" placeholder="password" />
-              <button onClick={() => handleSubmit()}>LOGIN</button>
+              {/* <button onClick={() => handleSubmit()}>LOGIN</button> */}
+              <NextButton data="outline-success" btnName="LOGIN" disblity={true} width="100px" callBack={handleSubmit}/>
             </div>
           </div>
         </div>

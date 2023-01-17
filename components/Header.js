@@ -57,7 +57,8 @@ export default function Header() {
                         userLogin && userLogin!== 'null' ?
                         <li onClick={() => toggMenue()}> <Link href="/Login"> <i className="fas fa-user"></i> <span>{userLogin}</span> </Link> </li> : 
                         <li onClick={() => toggMenue()}> <Link href="/Login"> Login </Link> </li> 
-                    }            
+                    } 
+                     <li> <Link href="/About"> About </Link> </li>           
                 </ul> 
             </div>
         </div>

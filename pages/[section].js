@@ -12,6 +12,7 @@ import { SET_CONFIG_DATA, SET_FILTEREDSECTIONS } from "../redux/slices/configSli
 import { getThumbNailData } from "../auth.server";
 import SlideAnimation from '../components/SliderAnimation';
 import { useInView } from 'react-intersection-observer';
+import { token } from '../menu';
 
 export default function Section ({ data })  {
   console.log("data.....Y", data[1]);
@@ -69,8 +70,11 @@ export default function Section ({ data })  {
       thumbnaiData.displayType = newFilteredSections[count]?.displayType;
       // thumbnaiData.data = [];
       thumbnaiData.title && setThumbNailData(oldArray => [...oldArray, thumbnaiData]);
-      const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+newFilteredSections[count]?.endpoint+`?`+getParams(newFilteredSections[count]?.parameters);
-      await getThumbNailData(thumbNailUrl).then((response) => {
+      const headerData = {
+        thumbNailUrl : `https://vcms.mobiotics.com/prodv3/`+newFilteredSections[count]?.endpoint+`?`+getParams(newFilteredSections[count]?.parameters),
+        token : token.authorization
+      };
+      await getThumbNailData(headerData).then((response) => {
         // thumbnailSectionsData = response.success.data;
         thumbnaiData.data = actThumbnailDataOne(response.success.data ? response.success.data : [], thumbnaiData.displayType);
         }).catch((error) => {
@@ -142,7 +146,7 @@ export const getStaticProps = wrapper.getStaticProps((store) =>
       thumbnailSections = newFilteredSections.slice(1, 2);
       const carouselUrl = `https://vcms.mobiotics.com/prodv3/`+newFilteredSections[0].endpoint+`?`+getParams(newFilteredSections[0].parameters);
       const caroselRes = await fetch(carouselUrl, {"headers": {
-                          "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VpZCI6IjE5NDQ2NTg3NTk1NTMxNzMiLCJkZXZpY2V0eXBlIjoiUEMiLCJkZXZpY2VvcyI6IldJTkRPV1MiLCJwcm92aWRlcmlkIjoibm9vcnBsYXkiLCJ0aW1lc3RhbXAiOjE2NzMzMjkzMTksImFwcHZlcnNpb24iOiI0Ni40LjAiLCJpcCI6IjE1LjE1OC40Mi4zOCIsIkdlb0xvY0lwIjoiMTcxLjc2LjcxLjkyIiwidmlzaXRpbmdjb3VudHJ5IjoiSU4iLCJpc3N1ZXIiOiJub29ycGxheSIsImV4cGlyZXNJbiI6NjA0ODAwLCJwcm92aWRlcm5hbWUiOiJOb29yUGxheSIsImlhdCI6MTY3MzMyOTMwNiwiZXhwIjoxNjczOTM0MTA2LCJpc3MiOiJub29ycGxheSJ9.lt8jmtxWTJkToFCncBnybDrVnM5Fba-W3lQuCF0r-jY",
+                          "authorization": token.authorization,
                         }, "method": "GET"});
       const caroselContent = await caroselRes.json();
       const caroselData = actACrouselDataOne(caroselContent.data ? caroselContent.data : []);
@@ -150,7 +154,7 @@ export const getStaticProps = wrapper.getStaticProps((store) =>
       thumbnailSectionsData.displayType = thumbnailSections[0]?.displayType;
       const thumbNailUrl = `https://vcms.mobiotics.com/prodv3/`+thumbnailSections[0].endpoint+`?`+getParams(thumbnailSections[0].parameters);
       const thumbNailRes = await fetch(thumbNailUrl, {"headers": {
-                              "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VpZCI6IjE5NDQ2NTg3NTk1NTMxNzMiLCJkZXZpY2V0eXBlIjoiUEMiLCJkZXZpY2VvcyI6IldJTkRPV1MiLCJwcm92aWRlcmlkIjoibm9vcnBsYXkiLCJ0aW1lc3RhbXAiOjE2NzMzMjkzMTksImFwcHZlcnNpb24iOiI0Ni40LjAiLCJpcCI6IjE1LjE1OC40Mi4zOCIsIkdlb0xvY0lwIjoiMTcxLjc2LjcxLjkyIiwidmlzaXRpbmdjb3VudHJ5IjoiSU4iLCJpc3N1ZXIiOiJub29ycGxheSIsImV4cGlyZXNJbiI6NjA0ODAwLCJwcm92aWRlcm5hbWUiOiJOb29yUGxheSIsImlhdCI6MTY3MzMyOTMwNiwiZXhwIjoxNjczOTM0MTA2LCJpc3MiOiJub29ycGxheSJ9.lt8jmtxWTJkToFCncBnybDrVnM5Fba-W3lQuCF0r-jY",
+                              "authorization": token.authorization,
                             }, "method": "GET"});
       const thumbnailContent = await thumbNailRes.json();
       let newThumbNailData =  actThumbnailDataOne(thumbnailContent.data ? thumbnailContent.data : [], thumbnailSectionsData.displayType);
@@ -160,7 +164,7 @@ export const getStaticProps = wrapper.getStaticProps((store) =>
       thumbnailSData.push(thumbnailSectionsData);
       data = data.concat([caroselData], [thumbnailSData]);
       // Pass data to the page via props
-      return { props: { data }, revalidate: 60}
+      return { props: { data }, revalidate: 60*30}
   });
 
 export async function getStaticPaths() {

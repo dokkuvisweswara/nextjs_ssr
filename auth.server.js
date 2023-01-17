@@ -36,12 +36,12 @@ export const getConfigData = async () => {
     return configContent;
 }
 
-export const getThumbNailData = async (verifyURl) => {
+export const getThumbNailData = async (data) => {
     var configure = {
-        url : verifyURl,   
+        url : data.thumbNailUrl,   
         method : 'GET',
         headers : {
-            "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VpZCI6IjE5NDQ2NTg3NTk1NTMxNzMiLCJkZXZpY2V0eXBlIjoiUEMiLCJkZXZpY2VvcyI6IldJTkRPV1MiLCJwcm92aWRlcmlkIjoibm9vcnBsYXkiLCJ0aW1lc3RhbXAiOjE2NzMzMjkzMTksImFwcHZlcnNpb24iOiI0Ni40LjAiLCJpcCI6IjE1LjE1OC40Mi4zOCIsIkdlb0xvY0lwIjoiMTcxLjc2LjcxLjkyIiwidmlzaXRpbmdjb3VudHJ5IjoiSU4iLCJpc3N1ZXIiOiJub29ycGxheSIsImV4cGlyZXNJbiI6NjA0ODAwLCJwcm92aWRlcm5hbWUiOiJOb29yUGxheSIsImlhdCI6MTY3MzMyOTMwNiwiZXhwIjoxNjczOTM0MTA2LCJpc3MiOiJub29ycGxheSJ9.lt8jmtxWTJkToFCncBnybDrVnM5Fba-W3lQuCF0r-jY"
+            "authorization": data.token
         }
     };
     return getServiceActive(configure);
