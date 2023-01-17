@@ -1,6 +1,5 @@
 
-import {wrapper} from '../redux/store';
-import styles from '../styles/Details.module.css';
+import styles from '../../styles/Details.module.css';
 
 const About = ({data}) => {
     console.log("Huhooooo---", data);
@@ -27,8 +26,8 @@ export const getStaticProps = async (context, sss) => {    // Fetch data from ex
       return { props: { data }, revalidate: 60*5}
   };
 
-export async function getStaticPaths() {
-    const paths =['/About'];
-    return { paths, fallback: true }
-};
+// export async function getStaticPaths() {
+//     const paths =['/About'];
+//     return { paths, fallback: true }
+// };
 export default About;
