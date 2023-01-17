@@ -28,7 +28,7 @@ export const getStaticProps = async (context, sss) => {    // Fetch data from ex
   };
 
 export async function getStaticPaths() {
-    const paths ={params:['/About']};
+    const paths =['/About'];
     return { paths, fallback: true }
 };
 export default About;
