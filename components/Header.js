@@ -69,7 +69,9 @@ export default function Header() {
                         <li onClick={() => toggMenue()}> <Link href="/Login"> <i className="fas fa-user"></i> <span>{userState}</span> </Link> </li> : 
                         <li onClick={() => toggMenue()}> <Link href="/Login"> Login </Link> </li> 
                     } 
-                     <li> <Link href="/About"> About </Link> </li>           
+                     <li> <Link href="/About"> About </Link> </li>
+                     <li> <Link href="/ssgDetails"> SSG </Link> </li>
+                     <li> <Link href="/isrDetails"> ISR </Link> </li>           
                 </ul> 
             </div>
         </div>
