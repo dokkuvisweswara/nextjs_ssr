@@ -61,7 +61,7 @@ export default function Login() {
       </Head>
       <main className={styles.main}>
         {
-          userState != '' ? <Redirect user={user}/> : loginForm()
+          userState != '' ? <Redirect user={userState}/> : loginForm()
         }
       </main>
     </div>
