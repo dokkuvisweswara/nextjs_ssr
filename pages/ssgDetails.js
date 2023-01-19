@@ -9,7 +9,7 @@ import { useLayoutEffect, useState } from 'react';
 export default function Details({data}) {
   
     const isSSR = () =>{return typeof window  == undefined};
-    let [userState, setUserState] = useState(null)
+    let [userState, setUserState] = useState('')
     console.log("userState....", userState);
     const filterImage = (sectionListDetailSingle) => {
       let single = [];
@@ -47,7 +47,7 @@ export default function Details({data}) {
                     <h1 className='M0'>{data.defaulttitle}</h1>
                     <p>{data.shortdescription}</p>
                     <h5><span>{data.category}</span> | <span>{data.defaultgenre}</span> | <span>{data.contentlanguage}</span> | <span>{data.pgrating}</span></h5>
-                    {userState ? <NextButton data="outline-success" btnName="WatchList" disblity={false} width="100%" callBack={handleSubmit}/> : <p>......</p>}
+                    {userState != '' ? <NextButton data="outline-success" btnName="WatchList" disblity={false} width="100%" callBack={handleSubmit}/> : <p>......</p>}
                 </div>
                 <div className={styles.deatilsImage}>
                     <Image

@@ -8,7 +8,7 @@ import { staticMenu } from '../menu.js';
 
 export default function Header() {
     
-    let [userState, setUserState] = useState(null)
+    let [userState, setUserState] = useState('')
     let userLogin = useSelector((state) => state.profile.name);
     const router = useRouter();
     const [staticMenue, setStaticMenue] = useState(staticMenu);
@@ -60,7 +60,7 @@ export default function Header() {
                 </ul>
                 <ul className={styles.PrimaryMenue}>
                     {
-                        userState ?
+                        userState != '' ?
                         <li onClick={() => toggMenue()}> <Link href="/Login"> <i className="fas fa-user"></i> <span>{userState}</span> </Link> </li> : 
                         <li onClick={() => toggMenue()}> <Link href="/Login"> Login </Link> </li> 
                     } 
