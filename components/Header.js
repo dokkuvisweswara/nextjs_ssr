@@ -7,21 +7,26 @@ import { useRouter } from "next/router";
 import { staticMenu } from '../menu.js';
 
 export default function Header() {
-    
-    let [userState, setUserState] = useState('')
-    let userLogin = useSelector((state) => state.profile.name);
     const router = useRouter();
+    let [userState, setUserState] = useState('');
+    let [userLoggedIn, setUserLoggedIn] = useState(false);
+    let userLogin = useSelector((state) => state.profile.name);
     const [staticMenue, setStaticMenue] = useState(staticMenu);
     const isSSR = () => typeof window  == 'undefined';
 
     useLayoutEffect(()=>{
-        setUserState(localStorage.getItem('userName'));
-      },[]);
+        setUserState(localStorage.getItem('userName') == null ? '' : localStorage.getItem('userName'));
+        if(localStorage.getItem('userName') == null){
+            setUserLoggedIn(false);
+          }else {
+            setUserLoggedIn(true);
+          }
+      },[router]);
 
     useEffect(() => {
         if(isSSR) return ;
         else actConfigApi();
-    }, []);
+    }, [router.events]);
     const toggMenue = () => {
         const siteNavMenu = document.querySelectorAll('[data-navmenu]');
         siteNavMenu[0].classList.toggle(styles.mobileMenu);
@@ -60,7 +65,7 @@ export default function Header() {
                 </ul>
                 <ul className={styles.PrimaryMenue}>
                     {
-                        userState != '' ?
+                        userLoggedIn  ?
                         <li onClick={() => toggMenue()}> <Link href="/Login"> <i className="fas fa-user"></i> <span>{userState}</span> </Link> </li> : 
                         <li onClick={() => toggMenue()}> <Link href="/Login"> Login </Link> </li> 
                     } 

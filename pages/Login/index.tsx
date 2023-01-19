@@ -12,28 +12,29 @@ import Redirect from '../../components/Redirect';
 import NextButton from '../../components/NextButton';
 
 export default function Login() {
-  
-  let [userState, setUserState] = useState('');
   const router = useRouter();
-  const user = useSelector((state: RootState) => state.profile.name);
-  const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   if (user == 'null' || user == null) {
-  //     setUserLogged(false);
-  //   } else {
-  //     setUserLogged(true);
-  //   }
-  // }, [router, user]);
-
+  let [userState, setUserState] = useState<any>('');
+  let [userLoggedIn, setUserLoggedIn] = useState(false);
+  let [errorHandle, setErrorHandle] = useState(false);
   useLayoutEffect(()=>{
-    setUserState(JSON.stringify(localStorage.getItem('userName')));
-    console.log("userState....", userState);
-  },[]);
+    console.log("99999", localStorage.getItem('userName'));
+    setUserState(localStorage.getItem('userName') == null ? '' : localStorage.getItem('userName'));
+    if(localStorage.getItem('userName') == null){
+      setUserLoggedIn(false);
+    }else {
+      setUserLoggedIn(true);
+    }
+  },[router.events]);
 
   const handleSubmit = (data:any) => {
-    localStorage.setItem('userName', userState);
-    Router.push('/Home');
+    if(userState == ''){
+      setErrorHandle(true);
+    }else{
+      setErrorHandle(false);
+      localStorage.setItem('userName', userState); 
+      // setUserLoggedIn(true);   
+      Router.push('/Home');
+    }
   }
   const loginForm = () => {
     return (
@@ -46,7 +47,7 @@ export default function Login() {
             <div className={styles.innerForm}>
               <input type="text" name="name" value={userState} onChange={(event) => setUserState(event.target.value)} placeholder="userName" />
               <input type="password" name="password" placeholder="password" />
-              {/* <button onClick={() => handleSubmit()}>LOGIN</button> */}
+              {errorHandle && <h5 style={{color:'red'}}>userName should not empty</h5>}
               <NextButton data="outline-success" btnName="LOGIN" disblity={false} width="100%" callBack={handleSubmit}/>
             </div>
           </div>
@@ -61,7 +62,7 @@ export default function Login() {
       </Head>
       <main className={styles.main}>
         {
-          userState != '' ? <Redirect user={userState}/> : loginForm()
+          userLoggedIn ? <Redirect user={userState}/> : loginForm()
         }
       </main>
     </div>

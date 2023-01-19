@@ -29,7 +29,7 @@ export default function Details({data}) {
     return singleUrl;
   }
   useLayoutEffect(()=>{
-    setUserState(localStorage.getItem('userName'));
+    setUserState(localStorage.getItem('userName') == null ? '' : localStorage.getItem('userName'));
     console.log("userState....", userState);
   },[])
   const handleSubmit = (data) => {
