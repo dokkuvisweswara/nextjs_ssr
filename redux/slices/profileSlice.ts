@@ -16,6 +16,7 @@ export const profileSlice = createSlice({
   name: 'profile',
   initialState: {
     name: !isSSR() ? somevalue() : 'null' ,
+    // name: null
   },
   reducers: {
     SET_PROFILE_NAME: (state, action) => {

@@ -64,16 +64,10 @@ export default function Details({data}) {
     )
 }
 
-export const getServerSideProps = wrapper.getServerSideProps((store) =>
+export const getStaticProps = wrapper.getStaticProps((store) =>
   async (context, sss) =>{
-     // Fetch data from external API 
-     console.log("---____---", context, "---+++---",store)
-    const section = context && context.query && context.query.details;
-     context.res.setHeader(
-       'Cache-Control',
-       'public, s-maxage=100, stale-while-revalidate=59'
-     );
-     const URl = `https://vcms.mobiotics.com/prodv3/subscriber/v1/content/`+section[2]+`?displaylanguage=eng`;
+     // Fetch data from external API
+     const URl = `https://vcms.mobiotics.com/prodv3/subscriber/v1/content/gnOJj66iEQb7?displaylanguage=eng`;
      const response = await fetch(URl, {"headers":{
                         "authorization": token.authorization,
                       }});

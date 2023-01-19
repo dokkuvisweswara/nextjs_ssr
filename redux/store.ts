@@ -1,7 +1,8 @@
-import { configureStore, combineReducers, AnyAction } from '@reduxjs/toolkit';
+import { configureStore, combineReducers, AnyAction, createStore } from '@reduxjs/toolkit';
 import { HYDRATE, createWrapper  } from "next-redux-wrapper";
 import profile from './slices/profileSlice';
 import config from './slices/configSlice';
+
 const combinedReducer = combineReducers({
   profile,
   config
@@ -20,9 +21,9 @@ const reducer:any = (state: ReturnType<typeof combinedReducer>, action: AnyActio
 };
 
 export const makeStore = () =>
-  configureStore({
-    reducer,
-  });
+  configureStore(
+    {reducer},
+  );
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export const wrapper = createWrapper(makeStore, { debug: true } );
 export type RootStore = ReturnType<typeof makeStore>;

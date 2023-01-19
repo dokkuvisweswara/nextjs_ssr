@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import Head from "next/head";
 
 export default function Carousel({ data }) {
-    console.log("data-->", data);
     const router = useRouter();
     const { id } = router.query;
     let [currentSlide, setCurrentSlide] = useState(0);
@@ -33,7 +32,6 @@ export default function Carousel({ data }) {
 
     function actsetUpCarousel(carousel) {
         setCarousel(carousel);
-        console.log("carousel", carousel)
         const slidesContainer = carousel.querySelector('[data-carousel-slides-container]');
         setNumSlides(slidesContainer.children.length);
     };
@@ -129,7 +127,6 @@ export default function Carousel({ data }) {
     );
 
     function CarouselSlider({data, i}) {
-        console.log("data--i", data, i)
         // const getHotspotImage = (sectionListDetailSingle) => {
         //     let single = []
         //     single = sectionListDetailSingle.filter((img) => {

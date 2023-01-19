@@ -6,8 +6,6 @@ import Image from 'next/image';
 import SlideAnimation from '../components/SliderAnimation';
 
 export default function Slider({ data, slideIndex, displayType }) {
-
-    console.log("data.....Y", displayType);
     const router = useRouter();
     const [tabsBoxOne, setTabsBoxOne] = useState(false);
     useEffect(() => {
@@ -22,10 +20,8 @@ export default function Slider({ data, slideIndex, displayType }) {
         // tabsBox[0].addEventListener("mousedown", () => {isDragging = true;} );
         tabsBox[0].addEventListener("mousemove", dragging);
         // document.addEventListener("mouseup", () => {isDragging = false;});
-        console.log("555555", data);
     }, [router.isReady, data]);
     const handlePrevNext = (isPrevious, keyValue) => {
-        console.log("isPrevious", keyValue);
         const tabsBox = document.querySelectorAll('[data-tab-box]');
         tabsBox.forEach((carou, index) => {
             if(index == keyValue){tabsBox[keyValue].scrollLeft += isPrevious ? -350 : 350;};

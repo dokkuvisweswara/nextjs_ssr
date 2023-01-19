@@ -1,3 +1,5 @@
+'use client';
+
 import { useRouter } from "next/router";
 import Router from 'next/router';
 import { useSelector, useDispatch } from "react-redux";
@@ -14,7 +16,7 @@ export default function Login() {
   const router = useRouter();
   const user = useSelector((state: RootState) => state.profile.name);
   const [userLogged, setUserLogged] = useState(true);
-  const dispacth = useDispatch();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (user == 'null' || user == null) {
@@ -25,10 +27,9 @@ export default function Login() {
   }, [router, user]);
 
   const handleSubmit = (data:any) => {
-    console.log("any", data);
     localStorage.setItem('userName', userName);
-    dispacth(SET_PROFILE_NAME(userName));
-    Router.push('/Home');
+    dispatch(SET_PROFILE_NAME(userName));
+    // Router.push('/Home');
   }
   const loginForm = () => {
     return (
@@ -42,7 +43,7 @@ export default function Login() {
               <input type="text" name="name" value={userName} onChange={(event) => setUserName(event.target.value)} placeholder="userName" />
               <input type="password" name="password" placeholder="password" />
               {/* <button onClick={() => handleSubmit()}>LOGIN</button> */}
-              <NextButton data="outline-success" btnName="LOGIN" disblity={true} width="100px" callBack={handleSubmit}/>
+              <NextButton data="outline-success" btnName="LOGIN" disblity={false} width="100%" callBack={handleSubmit}/>
             </div>
           </div>
         </div>

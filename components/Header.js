@@ -1,16 +1,23 @@
 import styles from '../styles/Header.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { staticMenu } from '../menu.js';
 
 export default function Header() {
+    
+    let [userState, setUserState] = useState(null)
     let userLogin = useSelector((state) => state.profile.name);
     const router = useRouter();
     const [staticMenue, setStaticMenue] = useState(staticMenu);
     const isSSR = () => typeof window  == 'undefined';
+
+    useLayoutEffect(()=>{
+        setUserState(localStorage.getItem('userName'));
+      },[]);
+
     useEffect(() => {
         if(isSSR) return ;
         else actConfigApi();
@@ -20,7 +27,6 @@ export default function Header() {
         siteNavMenu[0].classList.toggle(styles.mobileMenu);
     };
     const actConfigApi = async () => {
-        debugger;
         const fetch = await fetch(`https://d2xowqqrpfxxjf.cloudfront.net/noorplay/web-noorplayv2.json`);
         const response = await fetch.json();
         setStaticMenue(response.menu);
@@ -54,8 +60,8 @@ export default function Header() {
                 </ul>
                 <ul className={styles.PrimaryMenue}>
                     {
-                        userLogin && userLogin!== 'null' ?
-                        <li onClick={() => toggMenue()}> <Link href="/Login"> <i className="fas fa-user"></i> <span>{userLogin}</span> </Link> </li> : 
+                        userState ?
+                        <li onClick={() => toggMenue()}> <Link href="/Login"> <i className="fas fa-user"></i> <span>{userState}</span> </Link> </li> : 
                         <li onClick={() => toggMenue()}> <Link href="/Login"> Login </Link> </li> 
                     } 
                      <li> <Link href="/About"> About </Link> </li>           

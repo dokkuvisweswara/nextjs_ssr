@@ -9,20 +9,20 @@ import styles from '../styles/Home.module.css';
 import Head from 'next/head';
 import {wrapper} from '../redux/store';
 import { SET_CONFIG_DATA, SET_FILTEREDSECTIONS } from "../redux/slices/configSlice";
+import { SET_PROFILE_NAME } from "../redux/slices/profileSlice";
 import { getThumbNailData } from "../auth.server";
 import SlideAnimation from '../components/SliderAnimation';
 import { useInView } from 'react-intersection-observer';
 import { token } from '../menu';
 
 export default function Section ({ data })  {
-  console.log("data.....Y", data[1]);
     let [carouselData, setCarouselData] = React.useState(data[0]);
     let [thumbNailData, setThumbNailData] = React.useState(data[1]);
     let [isThumbNailLoading, setIsThumbNailLoading] = React.useState(true);
     let [counter, setCounter] = React.useState(2);
 
-    let user = useSelector((state) => state.config);      
-    console.log("data---||--", thumbNailData);
+    let storeData = useSelector((state) => state);
+    let dispatch = useDispatch();
     const isSSR = () =>{return typeof window  == undefined};
     const router = useRouter();
     const section = router.query.section;
@@ -32,40 +32,36 @@ export default function Section ({ data })  {
       threshold: 0.1
     };
     const { ref, inView, entry } = useInView(options);
-  
     React.useEffect(() => {
+        dispatch(SET_PROFILE_NAME(localStorage.getItem('userName')));
         setCarouselData(data[0]);
         setThumbNailData(data[1]);
         setCounter(2);
         setIsThumbNailLoading(true);
     }, [router.events, data]);
-    React.useEffect(() => {
-      console.log("counter", counter);      
+
+    React.useEffect(() => {     
       inView && handleScroll(counter);
     }, [inView]);
 
     const handleScroll = async (count) => {
-      let configContent = user.configData;
+      let configContent = storeData.config.configData;
       let filteredSections = [];
       let thumbnailSections = [];
       let thumbnailSectionsData = [];
       let thumbnaiData = {};
-      console.log("configContent", configContent)
       configContent && configContent.map((x, i)=>{
         if(x.id.toUpperCase() == section.toUpperCase()){
         filteredSections = x.sections;
       }});    
       getFilteredSection(filteredSections);
       let newFilteredSections = getFilteredSection(filteredSections) ? getFilteredSection(filteredSections) : [];
-      console.log("++++", thumbnailSections);
       let itemLength = newFilteredSections.length;
-      console.log("coming", count, itemLength);
       if(count >= itemLength){
         setIsThumbNailLoading(false);
         return;
       }   
       setCounter(count+1);
-      console.log("newFilteredSections[count]", newFilteredSections[count]);
       thumbnaiData.title = newFilteredSections[count]?.title?.default;
       thumbnaiData.displayType = newFilteredSections[count]?.displayType;
       // thumbnaiData.data = [];
@@ -125,10 +121,10 @@ export default function Section ({ data })  {
 export const getStaticProps = wrapper.getStaticProps((store) =>
   async (context, sss) => {    // Fetch data from external API 
       let data = [];
+      console.log("initialProps", store.getState());
       const configUrl = 'https://d2xowqqrpfxxjf.cloudfront.net/noorplay/web-noorplayv2.json';
       const configRes = await fetch(configUrl);
       const configContent = await configRes.json();
-      console.log("6666666666", context, sss);    
       store.dispatch(SET_CONFIG_DATA(configContent.screens));
       // let conFigScreen = store.getState().config.configData;
       const section = context && context.params && context.params.section.toUpperCase();
@@ -174,8 +170,7 @@ export async function getStaticPaths() {
   // Get the paths we want to pre-render based on posts
     let screens = [];
     configContent.screens.map((screen) => {
-      if(screen.id == 'EID-PLAYS' ||  screen.id == 'FREEMIUM' || screen.id == 'HOME-KIDS'){            
-      console.log("666666", screens);
+      if(screen.id == 'EID-PLAYS' ||  screen.id == 'FREEMIUM' || screen.id == 'HOME-KIDS'){
       }else {
         screens.push(screen);
       }
@@ -261,7 +256,6 @@ export function actACrouselDataOne(data){
 export function actThumbnailDataOne(data, dtype){
   let filteredArray = [];
   if(data.length >=0){
-    console.log("helloooooooo", data);
     return filteredArray = data.map((item, index)=> {
       let filteredData = {};
       filteredData.uid = item.category;
@@ -298,7 +292,6 @@ return singleUrl;
 export const actAthumbnailImage = (sectionListDetailSingle, x) => {
   let single = [];
   let singleUrl = '';
-  console.log("cvvv", sectionListDetailSingle);
   sectionListDetailSingle.filter((img) => {
     if(x === "PORTRAIT"){
     if(sectionListDetailSingle.length > 1){
