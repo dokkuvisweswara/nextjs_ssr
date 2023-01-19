@@ -9,7 +9,7 @@ import { useLayoutEffect, useState } from 'react';
 export default function Details({data}) {
   
     const isSSR = () =>{return typeof window  == undefined};
-    let [userState, setUserState] = useState(null)
+    let [userState, setUserState] = useState(null);
     console.log("userState....", userState);
     const filterImage = (sectionListDetailSingle) => {
       let single = [];
