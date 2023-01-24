@@ -49,7 +49,26 @@ export default function Login() {
               <input type="password" name="password" placeholder="password" />
               {errorHandle && <h5 style={{color:'red'}}>userName should not empty</h5>}
               <NextButton data="outline-success" btnName="LOGIN" disblity={false} width="100%" callBack={handleSubmit}/>
+              <div>
+              <div id="g_id_onload"
+                  data-client_id="210901910046-rfq56c0me9i6mlpt7vf9pevd00e11vm8.apps.googleusercontent.com"
+                  data-context="signin"
+                  data-ux_mode="popup"
+                  data-login_uri="https://nextjs-ssr-q77k.vercel.app/Login"
+                  data-auto_select="true"
+                  data-itp_support="true">
+              </div>
+              <div className="g_id_signin"
+                  data-type="standard"
+                  data-shape="rectangular"
+                  data-theme="outline"
+                  data-text="signin_with"
+                  data-size="large"
+                  data-logo_alignment="left">
+              </div>
             </div>
+            </div>
+            
           </div>
         </div>
       </>
