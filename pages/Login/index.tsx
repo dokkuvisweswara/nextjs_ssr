@@ -49,7 +49,6 @@ export default function Login() {
     return JSON.parse(window.atob(base64));
   }
   function handleCredentialResponse(response:any) {
-    setUserLoggedIn(true);
     let user:any = {};
     let cred = parseJwt(response.credential);    
     console.log("JSON===>", JSON.stringify(response));
@@ -59,7 +58,8 @@ export default function Login() {
     user.email = cred.email;
     user.picture = cred.picture;
     setUserData(user);
-    // setUserState(cred.given_name);
+    localStorage.setItem('userName', cred.given_name); 
+    setUserLoggedIn(true);
   }
   function googleLogin() {
     window.google.accounts.id.initialize({

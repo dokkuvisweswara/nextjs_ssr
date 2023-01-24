@@ -16,7 +16,7 @@ export default function Redirect({user}) {
             <h4>User_Email: <span>{user.email}</span></h4>
             <Image unoptimized 
                     src={user.picture} 
-                    alt={item.name}
+                    alt={user.name}
                     width={200}
                     height={300}
                     loading="eager"                    
