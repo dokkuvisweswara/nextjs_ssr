@@ -45,10 +45,12 @@ export default function Login() {
   function handleCredentialResponse(response:any) {
     console.log("Encoded JWT ID token: " + response.credential);
     setUserLoggedIn(true);
+    setUserState(response.email);
   }
   function googleLogin() {
     window.google.accounts.id.initialize({
       client_id: "210901910046-rfq56c0me9i6mlpt7vf9pevd00e11vm8.apps.googleusercontent.com",
+      scope: 'email profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
       callback: handleCredentialResponse
     });
     window.google.accounts.id.prompt(); // also display the One Tap dialog
