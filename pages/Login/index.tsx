@@ -16,6 +16,7 @@ declare global {
 export default function Login() {
   const router = useRouter();
   let [userState, setUserState] = useState<any>('');
+  let [userData, setUserData] = useState<any>({});
   let [userLoggedIn, setUserLoggedIn] = useState(false);
   let [errorHandle, setErrorHandle] = useState(false);
   useLayoutEffect(()=>{
@@ -49,10 +50,16 @@ export default function Login() {
   }
   function handleCredentialResponse(response:any) {
     setUserLoggedIn(true);
+    let user:any = {};
     let cred = parseJwt(response.credential);    
-    console.log("Encoded JWT ID token: " + response.credential);
+    console.log("JSON===>", JSON.stringify(response));
+    console.log("Encoded JWT ID token: " + response.credential, response.code);
     console.log("cred===>", cred);
-    setUserState(cred.email);
+    user.name = cred.given_name;
+    user.email = cred.email;
+    user.picture = cred.picture;
+    setUserData(user);
+    // setUserState(cred.given_name);
   }
   function googleLogin() {
     window.google.accounts.id.initialize({
@@ -90,7 +97,7 @@ export default function Login() {
       </Head>
       <main className={styles.main}>
         {
-          userLoggedIn ? <Redirect user={userState}/> : loginForm()
+          userLoggedIn ? <Redirect user={userData}/> : loginForm()
         }
       </main>
     </div>
