@@ -10,7 +10,9 @@ import Head from "next/head";
 import styles from '../../styles/Login.module.css';
 import Redirect from '../../components/Redirect';
 import NextButton from '../../components/NextButton';
-
+declare global {
+  interface Window { google:any }
+}
 export default function Login() {
   const router = useRouter();
   let [userState, setUserState] = useState<any>('');
@@ -23,6 +25,10 @@ export default function Login() {
       setUserLoggedIn(false);
     }else {
       setUserLoggedIn(true);
+      window.google.accounts.id.renderButton(
+        document.getElementById("buttonDiv"),
+        { theme: "outline", size: "large" }  // customization attributes
+      );
     }
   },[router.events]);
 
@@ -32,9 +38,20 @@ export default function Login() {
     }else{
       setErrorHandle(false);
       localStorage.setItem('userName', userState); 
-      // setUserLoggedIn(true);   
-      Router.push('/Home');
+      setUserLoggedIn(true);   
+      // Router.push('/Home');
     }
+  }
+  function handleCredentialResponse(response:any) {
+    console.log("Encoded JWT ID token: " + response.credential);
+    setUserLoggedIn(true);
+  }
+  function googleLogin() {
+    window.google.accounts.id.initialize({
+      client_id: "210901910046-rfq56c0me9i6mlpt7vf9pevd00e11vm8.apps.googleusercontent.com",
+      callback: handleCredentialResponse
+    });
+    window.google.accounts.id.prompt(); // also display the One Tap dialog
   }
   const loginForm = () => {
     return (
@@ -49,24 +66,7 @@ export default function Login() {
               <input type="password" name="password" placeholder="password" />
               {errorHandle && <h5 style={{color:'red'}}>userName should not empty</h5>}
               <NextButton data="outline-success" btnName="LOGIN" disblity={false} width="100%" callBack={handleSubmit}/>
-              <div>
-              <div id="g_id_onload"
-                  data-client_id="210901910046-rfq56c0me9i6mlpt7vf9pevd00e11vm8.apps.googleusercontent.com"
-                  data-context="signin"
-                  data-ux_mode="popup"
-                  data-login_uri="https://nextjs-ssr-q77k.vercel.app/Login"
-                  data-auto_select="true"
-                  data-itp_support="true">
-              </div>
-              <div className="g_id_signin"
-                  data-type="standard"
-                  data-shape="rectangular"
-                  data-theme="outline"
-                  data-text="signin_with"
-                  data-size="large"
-                  data-logo_alignment="left">
-              </div>
-            </div>
+              <div id="buttonDiv" onClick={() => googleLogin()}></div>
             </div>
             
           </div>
