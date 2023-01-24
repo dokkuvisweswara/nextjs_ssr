@@ -42,10 +42,16 @@ export default function Login() {
       // Router.push('/Home');
     }
   }
+ const  parseJwt = (token: any) => {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace('-', '+').replace('_', '/');
+    return JSON.parse(window.atob(base64));
+  }
   function handleCredentialResponse(response:any) {
-    console.log("Encoded JWT ID token: " + response);
+    console.log("Encoded JWT ID token: " + response.credential);
     setUserLoggedIn(true);
-    setUserState(response.email);
+    let cred = parseJwt(response.credential);
+    setUserState(cred.email);
   }
   function googleLogin() {
     window.google.accounts.id.initialize({
