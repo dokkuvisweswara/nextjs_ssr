@@ -48,9 +48,10 @@ export default function Login() {
     return JSON.parse(window.atob(base64));
   }
   function handleCredentialResponse(response:any) {
-    console.log("Encoded JWT ID token: " + response.credential);
     setUserLoggedIn(true);
-    let cred = parseJwt(response.credential);
+    let cred = parseJwt(response.credential);    
+    console.log("Encoded JWT ID token: " + response.credential);
+    console.log("cred===>", cred);
     setUserState(cred.email);
   }
   function googleLogin() {
