@@ -21,14 +21,14 @@ export default function Login() {
   useLayoutEffect(()=>{
     console.log("99999", localStorage.getItem('userName'));
     setUserState(localStorage.getItem('userName') == null ? '' : localStorage.getItem('userName'));
+    window.google.accounts.id.renderButton(
+      document.getElementById("buttonDiv"),
+      { theme: "outline", size: "large" }  // customization attributes
+    );
     if(localStorage.getItem('userName') == null){
       setUserLoggedIn(false);
     }else {
-      setUserLoggedIn(true);
-      window.google.accounts.id.renderButton(
-        document.getElementById("buttonDiv"),
-        { theme: "outline", size: "large" }  // customization attributes
-      );
+      setUserLoggedIn(true);      
     }
   },[router.events]);
 
@@ -43,7 +43,7 @@ export default function Login() {
     }
   }
   function handleCredentialResponse(response:any) {
-    console.log("Encoded JWT ID token: " + response.credential);
+    console.log("Encoded JWT ID token: " + response);
     setUserLoggedIn(true);
     setUserState(response.email);
   }
@@ -68,7 +68,7 @@ export default function Login() {
               <input type="password" name="password" placeholder="password" />
               {errorHandle && <h5 style={{color:'red'}}>userName should not empty</h5>}
               <NextButton data="outline-success" btnName="LOGIN" disblity={false} width="100%" callBack={handleSubmit}/>
-              <div id="buttonDiv" onClick={() => googleLogin()}></div>
+              <div id="buttonDiv" onClick={() => googleLogin()}>Google Login</div>
             </div>
             
           </div>
