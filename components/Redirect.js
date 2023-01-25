@@ -3,11 +3,12 @@ import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { useRouter } from 'next/router';
 
-export default function Redirect({user}) {
+export default function Redirect({user, callBack}) {
     const router = useRouter();
     const logOut = () => {
         localStorage.removeItem('userName');
-        router.reload();
+        callBack();
+        // router.reload();
     }
     return(
         <div>

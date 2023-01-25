@@ -13,7 +13,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    "paths": {
+      "~image/*": ["public/image/*"],
+      "~image": ["public/image"],
+  }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/About/index.js", "pages/Carousal/index.js", "pages/[section].js", "pages/_app.tsx", "components/Slider.js", "components/Redirect.js"],
   "exclude": ["node_modules"]

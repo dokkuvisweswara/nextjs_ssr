@@ -7,9 +7,11 @@ import { RootState } from "../../redux/store";
 import { SET_PROFILE_NAME } from "../../redux/slices/profileSlice";
 import { useLayoutEffect, useEffect, useState } from "react";
 import Head from "next/head";
+import Image from "next/image";
 import styles from '../../styles/Login.module.css';
 import Redirect from '../../components/Redirect';
 import NextButton from '../../components/NextButton';
+import darklogo from '~image/btn_google_signin_light_normal_web@2x.png';
 declare global {
   interface Window { google:any }
 }
@@ -19,6 +21,7 @@ export default function Login() {
   let [userData, setUserData] = useState<any>({});
   let [userLoggedIn, setUserLoggedIn] = useState(false);
   let [errorHandle, setErrorHandle] = useState(false);
+  
   useLayoutEffect(()=>{
     console.log("99999", localStorage.getItem('userName'));
     setUserState(localStorage.getItem('userName') == null ? '' : localStorage.getItem('userName'));
@@ -38,6 +41,9 @@ export default function Login() {
       setErrorHandle(true);
     }else{
       setErrorHandle(false);
+      let user:any = {};
+      user.name = userState;
+      setUserData(user);
       localStorage.setItem('userName', userState); 
       setUserLoggedIn(true);   
       // Router.push('/Home');
@@ -60,6 +66,8 @@ export default function Login() {
     setUserData(user);
     localStorage.setItem('userName', cred.given_name); 
     setUserLoggedIn(true);
+    let your_id_token = response.credential;
+    fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=`+your_id_token )
   }
   function googleLogin() {
     window.google.accounts.id.initialize({
@@ -69,7 +77,23 @@ export default function Login() {
     });
     window.google.accounts.id.prompt(); // also display the One Tap dialog
   }
-  const loginForm = () => {
+  
+  const handleCLickRedirect = () => {
+    setUserLoggedIn(false);
+  }
+  return (
+    <div className={styles.detailsContainer}>
+      <Head>
+        <title>Login Page</title>
+      </Head>
+      <div className={styles.main}>
+        {
+          userLoggedIn ? <Redirect user={userData} callBack={handleCLickRedirect}/> : <LoginForm />
+        }
+      </div>
+    </div>
+  )
+  function LoginForm() {
     return (
       <>
         <div className={styles.loginForm}>
@@ -82,7 +106,18 @@ export default function Login() {
               <input type="password" name="password" placeholder="password" />
               {errorHandle && <h5 style={{color:'red'}}>userName should not empty</h5>}
               <NextButton data="outline-success" btnName="LOGIN" disblity={false} width="100%" callBack={handleSubmit}/>
-              <div id="buttonDiv" onClick={() => googleLogin()}>Google Login</div>
+              <div style={{'textAlign': 'center'}}>OR</div>
+              <div id={styles.buttonDiv} onClick={() => googleLogin()}>
+                <Image 
+                      unoptimized 
+                      src={darklogo}
+                      alt={"google"} 
+                      width={260} height={50}
+                      loading="lazy"
+                      blurDataURL="data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+                      placeholder="blur"
+                />
+              </div>
             </div>
             
           </div>
@@ -90,16 +125,4 @@ export default function Login() {
       </>
     )
   }
-  return (
-    <div className={styles.detailsContainer}>
-      <Head>
-        <title>Login Page</title>
-      </Head>
-      <main className={styles.main}>
-        {
-          userLoggedIn ? <Redirect user={userData}/> : loginForm()
-        }
-      </main>
-    </div>
-  )
 }
